@@ -1,0 +1,7 @@
+extends layout
+
+block content
+	h1= title
+	p!= escapeHtml(message).replace(/\n/g, "<br/>")
+	block post_message
+	pre= trace

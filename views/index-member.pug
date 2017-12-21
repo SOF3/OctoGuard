@@ -1,0 +1,9 @@
+extends layout
+
+block foot_scripts
+	script(src="/javascripts/index.member.js")
+
+block content
+	h1 Welcome back, #{CommonConstants.login.name}!
+	hr
+	#installs-list

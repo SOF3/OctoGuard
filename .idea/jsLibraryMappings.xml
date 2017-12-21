@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaScriptLibraryMappings">
+    <file url="file://$PROJECT_DIR$/public/javascripts" libraries="{jquery-3.2.1}" />
+    <file url="file://$PROJECT_DIR$/views" libraries="{jquery-3.2.1}" />
+    <file url="PROJECT" libraries="{@types/express}" />
+    <includedPredefinedLibrary name="Node.js Core" />
+  </component>
+</project>

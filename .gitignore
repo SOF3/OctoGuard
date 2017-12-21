@@ -1,0 +1,27 @@
+# confidential
+/secrets/
+# environment
+/bin/
+/node_modules
+# generated
+/gen/
+/public/javascripts/
+/public/stylesheets/*.css
+
+# PhpStorm/WebStorm
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/dictionaries
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.xml
+.idea/**/dataSources.local.xml
+.idea/**/deployment.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+.idea/**/gradle.xml
+.idea/**/libraries
+
+.idea/markdown-navigator.xml
+.idea/markdown-navigator/

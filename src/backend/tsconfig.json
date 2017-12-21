@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"outDir": "../../gen",
+		"allowJs": true,
+		"target": "es5",
+		"noImplicitReturns": true,
+		"allowUnreachableCode": false,
+		"newLine": "LF",
+		"moduleResolution": "node",
+		"preserveConstEnums": true,
+		"removeComments": true
+	},
+	"include": [
+		"./**/*",
+		"../shared/**/*.d.ts"
+	]
+}

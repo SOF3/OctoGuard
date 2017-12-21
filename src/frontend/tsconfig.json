@@ -1,0 +1,18 @@
+{
+	"compilerOptions": {
+		"outDir": "../../public/javascripts",
+		"allowJs": true,
+		"target": "es5",
+		"noImplicitReturns": true,
+		"allowUnreachableCode": false,
+		"newLine": "LF",
+		"sourceMap": false,
+		"module": "none",
+		"preserveConstEnums": true,
+		"removeComments": true
+	},
+	"include": [
+		"./**/*",
+		"../shared/**/*.d.ts"
+	]
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectTasksOptions" suppressed-tasks="Pug/Jade;Less;Babel">
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="$ProjectFileDir$\utils\scrapSecrets.js" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" />
+      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="fileExtension" value="json" />
+      <option name="immediateSync" value="true" />
+      <option name="name" value="secrets.json stub" />
+      <option name="output" value="$ProjectFileDir$\src\shared\secrets.d.ts" />
+      <option name="outputFilters">
+        <array />
+      </option>
+      <option name="outputFromStdout" value="false" />
+      <option name="program" value="C:/Program Files/nodejs/node.exe" />
+      <option name="runOnExternalChanges" value="true" />
+      <option name="scopeName" value="secrets" />
+      <option name="trackOnlyRoot" value="false" />
+      <option name="workingDir" value="" />
+      <envs />
+    </TaskOptions>
+    <TaskOptions isEnabled="false">
+      <option name="arguments" value="$ProjectFileDir$\tsc.sh" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" />
+      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="fileExtension" value="ts" />
+      <option name="immediateSync" value="true" />
+      <option name="name" value="tsc" />
+      <option name="output" value="$ProjectFileDir$\gen" />
+      <option name="outputFilters">
+        <array />
+      </option>
+      <option name="outputFromStdout" value="false" />
+      <option name="program" value="C:/Program Files/Git/usr/bin/bash.exe" />
+      <option name="runOnExternalChanges" value="true" />
+      <option name="scopeName" value="ts-src" />
+      <option name="trackOnlyRoot" value="false" />
+      <option name="workingDir" value="$ProjectFileDir$" />
+      <envs />
+    </TaskOptions>
+  </component>
+</project>
