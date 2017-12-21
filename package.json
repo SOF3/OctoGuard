@@ -15,8 +15,9 @@
     "google-closure-compiler-js": "^20171203.0.0",
     "less-middleware": "~2.2.1",
     "morgan": "~1.9.0",
+    "mysql": "^2.15.0",
     "pug": "^2.0.0-rc.4",
-    "query-string": "latest",
+    "query-string": "^5.0.1",
     "random-strings": "^0.0.1",
     "request": "^2.83.0",
     "serve-favicon": "~2.4.5"

@@ -1,10 +1,10 @@
-import {Session} from "../Session";
-import {TriggeredError} from "../../TriggeredError";
-import * as curl from "request";
-import * as secrets from "../../secrets";
-import * as queryString from "query-string";
-import * as ghApi from "../../gh/api";
-import {Login} from "../Login";
+import {Session} from "../Session"
+import {TriggeredError} from "../../TriggeredError"
+import * as curl from "request"
+import * as query_string from "query-string"
+import * as gh_api from "../../gh/api"
+import {Login} from "../Login"
+import {secrets} from "../../secrets"
 
 export function loginFlow(req, res, next){
 	if(!req.query.code || !req.query.state){
@@ -23,8 +23,8 @@ export function loginFlow(req, res, next){
 
 	curl.post("https://github.com/login/oauth/access_token", {
 		form: {
-			client_id: secrets.secrets.ghApp.clientId,
-			client_secret: secrets.secrets.ghApp.secret,
+			client_id: secrets.ghApp.clientId,
+			client_secret: secrets.ghApp.secret,
 			code: req.query.code,
 			state: req.query.state
 		}
@@ -32,15 +32,16 @@ export function loginFlow(req, res, next){
 }
 
 function continueLoginFlow(req, res){
-	return function(err, httpResponse, body){
-		const {access_token: token}: {access_token: string} = queryString.parse(body);
-		console.log("Logged in!");
-		ghApi.whoAmI(token, user =>{
+	return (err, httpResponse, body) =>{
+		const {access_token: token}: {access_token: string} = query_string.parse(body);
+		gh_api.whoAmI(token, user =>{
 			console.log(`Login ${user.login}!`);
 			const login: Login = req.session.login;
 			Login.login(login, user.id, user.login, user.name === null ? user.login : user.name, token);
-			console.log(login);
 			res.redirect("/");
+		}, (message, statusCode) =>{
+			res.status(500);
+			res.send(`Failed to identify your account. Got ${statusCode} error from GitHub: ${message}`);
 		});
 	};
 }

@@ -6,4 +6,17 @@ block foot_scripts
 block content
 	h1 Welcome back, #{CommonConstants.login.name}!
 	hr
-	#installs-list
+	#body-wrapper
+		#install-list-panel
+			h3 Your Integrations
+			p#install-list-loading Loading...
+			#install-list
+			#install-entry-template.template
+				.install-entry-row
+					.install-name.install-entry-value
+					.install-type.install-entry-value
+				.install-entry-row
+					.install-coverage.install-entry-value
+					.install-creation-date.timestamp.install-entry-value
+			p
+				a.action#install-add Change integrated repos

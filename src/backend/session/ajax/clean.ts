@@ -1,6 +1,6 @@
-import {Session} from "../Session";
-import {AjaxTokenEntry} from "./AjaxTokenEntry";
-import {Login} from "../Login";
+import {Session} from "../Session"
+import {AjaxTokenEntry} from "./AjaxTokenEntry"
+import {Login} from "../Login"
 
 export function clean(req, res, next){
 	const session: Session = req.session;

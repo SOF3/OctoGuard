@@ -1,0 +1,25 @@
+DROP TABLE IF EXISTS user;
+CREATE TABLE user (
+	uid        BIGINT UNSIGNED PRIMARY KEY,
+	name       VARCHAR(64) UNIQUE NOT NULL,
+	regDate    TIMESTAMP,
+	onlineDate TIMESTAMP
+);
+DROP TABLE IF EXISTS profie;
+CREATE TABLE profile (
+	pid     INT PRIMARY KEY,
+	owner   BIGINT UNSIGNED,
+	created TIMESTAMP,
+	updated TIMESTAMP,
+	FOREIGN KEY (owner) REFERENCES user (uid)
+		ON DELETE SET NULL
+);
+DROP TABLE IF EXISTS profile_rule;
+CREATE TABLE profile_rule (
+	rid  INT PRIMARY KEY,
+	pid  INT,
+	type VARCHAR(32),
+	updated TIMESTAMP,
+	FOREIGN KEY (pid) REFERENCES profile (pid)
+		ON DELETE CASCADE
+);

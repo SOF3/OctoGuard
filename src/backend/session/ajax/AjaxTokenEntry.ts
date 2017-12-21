@@ -1,5 +1,5 @@
-import {Session} from "../Session";
-import * as random from "random-strings";
+import {Session} from "../Session"
+import * as random from "random-strings"
 
 export class AjaxTokenEntry{
 	key: string;

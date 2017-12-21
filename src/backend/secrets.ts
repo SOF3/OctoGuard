@@ -1,4 +1,5 @@
 import Secrets = OctoGuard.Secrets;
+import {OctoGuard} from "../shared/secrets"
 
 const fs = require("fs");
 

@@ -7,7 +7,8 @@ const EOL = `
 
 const defPath = path.join(__dirname, "..", "src", "shared", "secrets.d.ts");
 const stream = fs.createWriteStream(defPath);
-stream.write(`export namespace OctoGuard{
+stream.write(`///generated file
+export namespace OctoGuard{
 	interface Secrets`);
 emitObject(secrets, 2);
 stream.write(EOL + "}" + EOL);

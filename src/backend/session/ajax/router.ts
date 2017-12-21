@@ -1,8 +1,8 @@
-import * as express from "express";
-import {TriggeredError} from "../../TriggeredError";
-import {Session} from "../Session";
-import {AjaxTokenEntry} from "./AjaxTokenEntry";
-import {AjaxRequestHandler, knownEnds} from "./knownEnds";
+import * as express from "express"
+import {TriggeredError} from "../../TriggeredError"
+import {Session} from "../Session"
+import {AjaxTokenEntry} from "./AjaxTokenEntry"
+import {AjaxRequest, ARH, knownEnds} from "./knownEnds"
 
 const router = express.Router();
 export = router;
@@ -36,8 +36,11 @@ router.use((req, res, next) =>{
 		return;
 	}
 
-	let handler: AjaxRequestHandler = knownEnds[path];
-	if(handler !== undefined){
-		handler(<Session> req.session, response => res.send(JSON.stringify(response)));
-	}
+	let handler: ARH<ReqSuper, ResSuper> = knownEnds[path.substr(1)];
+	handler(new AjaxRequest(req.session, req.body, (response) =>{
+		res.set("Content-Type", "application/json").send(JSON.stringify(response));
+	}, (status, message) =>{
+		res.status(status);
+		res.set("Content-Type", "text/plain").send(message);
+	}));
 });

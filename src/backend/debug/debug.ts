@@ -1,7 +1,9 @@
-import * as express from "express";
-import {TriggeredError} from "../TriggeredError";
+import * as express from "express"
+import {TriggeredError} from "../TriggeredError"
 
 const secrets = require("../secrets");
+
+export const IS_DEBUGGING = true;
 
 export const router = express.Router()
 	.use((req, res, next) =>{

@@ -14,6 +14,10 @@ declare namespace GitHubAPI{
 		email: string | null
 	}
 
+	interface Repository{
+
+	}
+
 	const enum _RepositorySelection {
 		selected = "selected",
 		all = "all",

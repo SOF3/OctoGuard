@@ -1,12 +1,18 @@
-import * as express from "express";
-import * as secrets from "../secrets";
-import {Session} from "../session/Session";
-import {AjaxTokenEntry} from "../session/ajax/AjaxTokenEntry";
+import * as express from "express"
+import {Session} from "../session/Session"
+import {AjaxTokenEntry} from "../session/ajax/AjaxTokenEntry"
+import {secrets} from "../secrets"
+import {IS_DEBUGGING, isRequestDebugger} from "../debug/debug"
+import {TriggeredError} from "../TriggeredError"
 
 export const router = express.Router();
 
 // init CommonConstants
 router.use((req, res, next) =>{
+	if(IS_DEBUGGING && !isRequestDebugger(req)){
+		next(new TriggeredError("Server is under maintenance.", 403));
+		return;
+	}
 	const session: Session = req.session;
 	const login = session.login.loggedIn ? {
 		name: session.login.name,
@@ -16,9 +22,9 @@ router.use((req, res, next) =>{
 	const longAjaxToken = AjaxTokenEntry.create(session, "?#@Long Ajax Token@#?", 300e+3).key;
 	res.locals.CommonConstants = {
 		ghApp: {
-			id: secrets.secrets.ghApp.id,
-			clientId: secrets.secrets.ghApp.clientId,
-			name: secrets.secrets.ghApp.name,
+			id: secrets.ghApp.id,
+			clientId: secrets.ghApp.clientId,
+			name: secrets.ghApp.name,
 		},
 		longAjaxToken: longAjaxToken,
 		login: login
