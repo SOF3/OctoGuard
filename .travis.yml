@@ -1,6 +1,7 @@
 language: node_js
 install:
-  - npm install tsc
+  - npm install typescript typings
+  - typings install
 before_script:
   - chmod +x *.sh
 script:
