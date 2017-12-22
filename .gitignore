@@ -1,7 +1,6 @@
 # confidential
 /secrets/
-# environment
-/bin/
+# node
 /node_modules
 # generated
 /gen/
