@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"outDir": "../../public/javascripts",
 		"allowJs": true,
-		"target": "es5",
+		"target": "es6",
 		"noImplicitReturns": true,
 		"allowUnreachableCode": false,
 		"newLine": "LF",

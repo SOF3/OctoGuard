@@ -1,6 +1,5 @@
 import * as express from "express"
 import {Session} from "../session/Session"
-import {AjaxTokenEntry} from "../session/ajax/AjaxTokenEntry"
 import {secrets} from "../secrets"
 import {IS_DEBUGGING, isRequestDebugger} from "../debug/debug"
 import {TriggeredError} from "../TriggeredError"
@@ -19,14 +18,12 @@ router.use((req, res, next) =>{
 		uid: session.login.uid,
 		displayName: session.login.displayName
 	} : null;
-	const longAjaxToken = AjaxTokenEntry.create(session, "?#@Long Ajax Token@#?", 300e+3).key;
 	res.locals.CommonConstants = {
 		ghApp: {
 			id: secrets.ghApp.id,
 			clientId: secrets.ghApp.clientId,
 			name: secrets.ghApp.name,
 		},
-		longAjaxToken: longAjaxToken,
 		login: login
 	};
 	next();

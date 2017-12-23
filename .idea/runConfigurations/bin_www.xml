@@ -7,7 +7,8 @@
       <browser url="http://localhost:3000/" />
     </EXTENSION>
     <method>
-      <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_tsc" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="tsc backend" run_configuration_type="BashConfigurationType" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="tsc frontend" run_configuration_type="BashConfigurationType" />
     </method>
   </configuration>
 </component>

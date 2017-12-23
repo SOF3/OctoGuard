@@ -12,7 +12,6 @@ import * as debug from "./debug/debug"
 import * as index from "./ui/index"
 import * as flow from "./session/flow"
 import * as webhook from "./webhook/webhook"
-import {AjaxTokenEntry} from "./session/ajax/AjaxTokenEntry"
 import {Session} from "./session/Session"
 import {secrets} from "./secrets"
 
@@ -81,14 +80,12 @@ app.use((err: Error | TriggeredError, req, res, next) =>{
 		uid: session.login.uid,
 		displayName: session.login.displayName
 	} : null;
-	const longAjaxToken = AjaxTokenEntry.create(session, "?#@Long Ajax Token@#?", 300e+3).key;
 	res.locals.CommonConstants = {
 		ghApp: {
 			id: secrets.ghApp.id,
 			clientId: secrets.ghApp.clientId,
 			name: secrets.ghApp.name,
 		},
-		longAjaxToken: longAjaxToken,
 		login: login
 	};
 

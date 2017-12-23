@@ -44,3 +44,9 @@ router.use((req, res, next) =>{
 		res.set("Content-Type", "text/plain").send(message);
 	}));
 });
+
+router.use((err: Error | TriggeredError, req, res, next) =>{
+	res.status(err instanceof TriggeredError ? (err.status || 500) : 500);
+	console.error(err);
+	res.send(JSON.stringify(err.message, null, "\t"));
+});

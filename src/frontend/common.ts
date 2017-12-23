@@ -22,7 +22,11 @@ function ajax(path: string, args: ReqSuper, success: JQuery.Ajax.SuccessCallback
 }
 
 $(function(){
-	linkify("a#action-login", `https://github.com/login/oauth/authorize?client_id=${CommonConstants.ghApp.clientId}&state=${CommonConstants.longAjaxToken}`);
+	$("a#action-login").click(function(){
+		$.post("/ajax/request", {path: "Special:auth-callback"}, token =>{
+			window.location.assign(`https://github.com/login/oauth/authorize?client_id=${CommonConstants.ghApp.clientId}&state=${token}`)
+		}, "text");
+	});
 
 	(function updateTimestamps(){
 		const now = new Date();

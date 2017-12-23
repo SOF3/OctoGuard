@@ -4,7 +4,6 @@ declare const CommonConstants: {
 		clientId: string
 		name: string
 	}
-	longAjaxToken: string
 	login: {
 		name: string;
 		uid: number;

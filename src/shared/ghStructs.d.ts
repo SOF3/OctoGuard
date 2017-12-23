@@ -36,6 +36,7 @@ declare namespace GitHubAPI{
 		id: number
 		account: Account
 		repository_selection: string & RepositorySelection
+		html_url: string
 		app_id: number
 		target_id: number
 		target_type: string

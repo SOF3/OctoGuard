@@ -1,7 +1,7 @@
 extends layout
 
 block foot_scripts
-	script(src="/javascripts/index.member.js")
+	script(src="/javascripts/index-member.js")
 
 block content
 	h1 Welcome back, #{CommonConstants.login.name}!
@@ -17,6 +17,10 @@ block content
 					.install-type.install-entry-value
 				.install-entry-row
 					.install-coverage.install-entry-value
-					.install-creation-date.timestamp.install-entry-value
+						span.install-coverage-value
+						span repos
+						span.install-coverage-count
+						a.install-coverage-edit (Edit)
+					.install-creationDate.timestamp.install-entry-value
 			p
 				a.action#install-add Change integrated repos

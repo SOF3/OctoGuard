@@ -27,15 +27,15 @@ export function getInstallRepos(installationId: number, token: string, consume: 
 	_(`/user/installations/${installationId}/repositories?per_page=3`, "GET", token, consume, error, undefined, [PREVIEW_INTEGRATION], (r: InstallReposResponse) => r.repositories);
 }
 
-type GenericResponse = StringMapping<any> | any[]
+type GenericResponse = {} | any[]
 
 function _(path: string, method: string, token: string,
            consume: (object: Object) => void,
            error: GHErrorHandler,
-           body: any = undefined,
+           body?: any,
            accept: string[] = [PREVIEW_INTEGRATION],
            followAdapter: ((r: GenericResponse) => any[]) | null = null){
-	console.log(`curl ${method} ${path}`);
+	console.debug(`curl: ${method} ${path}`);
 	curl({
 		url: path,
 		baseUrl: "https://api.github.com/",
@@ -49,6 +49,8 @@ function _(path: string, method: string, token: string,
 		json: true
 	}, (err: ClientRequest, response: IncomingMessage, body: GenericResponse) =>{
 		if(response.statusCode >= 400){
+			console.error("curl error: " + response.statusCode);
+			console.trace(JSON.stringify(body));
 			error("An error occurred while accessing the GitHub API", response.statusCode);
 		}else{
 			const link: string | undefined = <string> response.headers.Link;

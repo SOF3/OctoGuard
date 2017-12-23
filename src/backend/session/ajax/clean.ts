@@ -5,7 +5,7 @@ import {Login} from "../Login"
 export function clean(req, res, next){
 	const session: Session = req.session;
 	if(session.ajaxTokens === undefined){
-		session.ajaxTokens = {} as Object;
+		session.ajaxTokens = {};
 	}else{
 		const now = new Date().getTime();
 		for(const token in session.ajaxTokens){

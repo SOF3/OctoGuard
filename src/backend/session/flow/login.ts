@@ -35,7 +35,7 @@ function continueLoginFlow(req, res){
 	return (err, httpResponse, body) =>{
 		const {access_token: token}: {access_token: string} = query_string.parse(body);
 		gh_api.whoAmI(token, user =>{
-			console.log(`Login ${user.login}!`);
+			console.info(`Login ${user.login}!`);
 			const login: Login = req.session.login;
 			Login.login(login, user.id, user.login, user.name === null ? user.login : user.name, token);
 			res.redirect("/");

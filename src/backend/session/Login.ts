@@ -1,3 +1,6 @@
+import * as db from "../db/db"
+import {reportError} from "../db/db"
+
 export class Login{
 	loggedIn: boolean = false;
 	uid: number | null;
@@ -11,5 +14,15 @@ export class Login{
 		login.name = name;
 		login.displayName = displayName;
 		login.token = token;
+
+		db.keyInsert("user", {
+			uid: uid,
+			regDate: new Date()
+		}, {
+			name: name,
+			onlineDate: new Date()
+		}, error =>{
+			reportError(error);
+		})
 	}
 }
