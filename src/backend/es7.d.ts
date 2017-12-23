@@ -1,5 +1,5 @@
 declare interface ObjectConstructor{
-	assign<T, U, V>(t: T, u: U, v: V);
+	assign<T, U, V, W>(t: T, u: U, v?: V, w?: W);
 
 	values(object: {});
 }

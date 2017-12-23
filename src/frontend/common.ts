@@ -21,12 +21,14 @@ function ajax(path: string, args: ReqSuper, success: JQuery.Ajax.SuccessCallback
 	}, "text");
 }
 
+function login(){
+	$.post("/ajax/request", {path: "Special:auth-callback", long: true}, token =>{
+		window.location.assign(`https://github.com/login/oauth/authorize?client_id=${CommonConstants.ghApp.clientId}&state=${token}`)
+	}, "text");
+}
+
 $(function(){
-	$("a#action-login").click(function(){
-		$.post("/ajax/request", {path: "Special:auth-callback"}, token =>{
-			window.location.assign(`https://github.com/login/oauth/authorize?client_id=${CommonConstants.ghApp.clientId}&state=${token}`)
-		}, "text");
-	});
+	$("a#action-login").click(login);
 
 	(function updateTimestamps(){
 		const now = new Date();

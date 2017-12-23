@@ -1,5 +1,5 @@
 import {Session} from "../Session"
-import {TriggeredError} from "../../TriggeredError"
+import {TriggeredError} from "../../utils/TriggeredError"
 import * as curl from "request"
 import * as query_string from "query-string"
 import * as gh_api from "../../gh/api"

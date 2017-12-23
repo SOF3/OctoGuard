@@ -1,5 +1,5 @@
 import * as express from "express"
-import {TriggeredError} from "../TriggeredError"
+import {TriggeredError} from "../utils/TriggeredError"
 
 const secrets = require("../secrets");
 

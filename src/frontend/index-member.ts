@@ -16,6 +16,7 @@ $(function(){
 			div.find(".install-creationDate").attr("data-timestamp", new Date(installation.created_at).getTime());
 			ajax("installDetails", <InstallDetailsReq> {installId: installId}, (response: InstallDetailsRes) =>{
 				div.find(".install-coverage-count").text(`(${response.length})`);
+				div.find(".install-coverage").attr("title", response.map(repo => repo.name).join(", "));
 			});
 			wrapper.append(div);
 		}

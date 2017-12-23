@@ -2,7 +2,7 @@ import * as express from "express"
 import {Session} from "../session/Session"
 import {secrets} from "../secrets"
 import {IS_DEBUGGING, isRequestDebugger} from "../debug/debug"
-import {TriggeredError} from "../TriggeredError"
+import {TriggeredError} from "../utils/TriggeredError"
 
 export const router = express.Router();
 

@@ -1,5 +1,5 @@
 import * as express from "express"
-import {TriggeredError} from "../../TriggeredError"
+import {TriggeredError} from "../../utils/TriggeredError"
 import {Session} from "../Session"
 import {AjaxTokenEntry} from "./AjaxTokenEntry"
 import {AjaxRequest, ARH, knownEnds} from "./knownEnds"
@@ -12,9 +12,10 @@ router.post("/request", (req, res, next) =>{
 		next(new TriggeredError("Missing POST parameter 'path'", 400));
 		return;
 	}
-	const entry = AjaxTokenEntry.create(req.session, req.body.path);
+	const entry = AjaxTokenEntry.create(req.session, req.body.path, req.body.long ? 300e+3 : 10e+3);
 	res.set("Content-Type", "text/plain");
 	res.send(entry.key);
+	console.log(`Created token ${entry.key}, remaining tokens {${Object.keys(req.session.ajaxTokens).join(", ")}}`)
 });
 
 router.use((req, res, next) =>{
@@ -25,11 +26,13 @@ router.use((req, res, next) =>{
 	}
 	const token: string = req.get("X-Ajax-Token");
 	if(session.ajaxTokens[token] === undefined){
-		next(new TriggeredError("Non-existent X-Ajax-Token", 401));
+		console.log(`Missing token ${token}, remaining tokens {${Object.keys(session.ajaxTokens)}}`);
+		next(new TriggeredError(`Non-existent X-Ajax-Token: ${token}`, 401));
 		return;
 	}
 	const entry: AjaxTokenEntry = session.ajaxTokens[token];
 	delete session.ajaxTokens[token];
+	console.log(`Consumed token ${token}, remaining tokens {${Object.keys(session.ajaxTokens).join(", ")}}`);
 	const path = req.path;
 	if(path !== entry.path){
 		next(new TriggeredError("The requested path is inconsistent with the path provided in the AJAX token request", 401));

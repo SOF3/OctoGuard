@@ -24,7 +24,7 @@ type InstallReposResponse = GenericResponse & {
 }
 
 export function getInstallRepos(installationId: number, token: string, consume: (repos: Repository[]) => void, error: GHErrorHandler){
-	_(`/user/installations/${installationId}/repositories?per_page=3`, "GET", token, consume, error, undefined, [PREVIEW_INTEGRATION], (r: InstallReposResponse) => r.repositories);
+	_(`/user/installations/${installationId}/repositories?per_page=100`, "GET", token, consume, error, undefined, [PREVIEW_INTEGRATION], (r: InstallReposResponse) => r.repositories);
 }
 
 type GenericResponse = {} | any[]
@@ -53,18 +53,23 @@ function _(path: string, method: string, token: string,
 			console.trace(JSON.stringify(body));
 			error("An error occurred while accessing the GitHub API", response.statusCode);
 		}else{
-			const link: string | undefined = <string> response.headers.Link;
+			const link: string | undefined = <string> response.headers.link;
 			body = followAdapter === null ? body : followAdapter(body);
+			let linked: boolean = false;
 			if(link){
 				const match: RegExpExecArray | null = /<https:\/\/api\.github\.com(\/[^>]+)>; rel="next"/.exec(link);
 				if(match !== null){
 					const follow = match[1];
+					linked = true;
 					_(follow, method, token, (append) =>{
 						body = (<any[]> body).concat(append); // tail recursion! $append should contain all pages from the next one onwards
+						consume(body);
 					}, error, body, accept, followAdapter);
 				}
 			}
-			consume(body);
+			if(!linked){
+				consume(body);
+			}
 		}
 	});
 }

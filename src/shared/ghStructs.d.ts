@@ -15,7 +15,7 @@ declare namespace GitHubAPI{
 	}
 
 	interface Repository{
-
+		name: string;
 	}
 
 	const enum _RepositorySelection {

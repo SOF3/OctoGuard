@@ -6,7 +6,7 @@ import * as cookie_parser from "cookie-parser"
 import * as body_parser from "body-parser"
 import * as less_middleware from "less-middleware"
 import * as session from "express-session"
-import {TriggeredError} from "./TriggeredError"
+import {TriggeredError} from "./utils/TriggeredError"
 import * as ajax from "./session/ajax/ajax"
 import * as debug from "./debug/debug"
 import * as index from "./ui/index"
@@ -74,8 +74,8 @@ app.use((err: Error | TriggeredError, req, res, next) =>{
 		res.status(500);
 	}
 
-	const session: Session = req.session;
-	const login = session.login.loggedIn ? {
+	const session: Session | null = req.session;
+	const login = session && session.login && session.login.loggedIn ? {
 		name: session.login.name,
 		uid: session.login.uid,
 		displayName: session.login.displayName
