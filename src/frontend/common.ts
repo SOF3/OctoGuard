@@ -1,3 +1,6 @@
+function nop(): void{
+}
+
 function linkify(selector: string, url: string){
 	$(selector).attr("href", url).click(() => location.assign(url));
 }
@@ -6,19 +9,81 @@ function ajax(path: string, args: ReqSuper, success: JQuery.Ajax.SuccessCallback
 	if(path.charAt(0) !== "/"){
 		path = "/" + path;
 	}
-	$.post("/ajax/request", {path: path}, token =>{
-		$.ajax("/ajax" + path, {
+	atomicPost("/ajax/request", {path: path}, token =>{
+		atomicAjax("/ajax" + path, {
 			contentType: "application/json",
 			headers: {"X-Ajax-Token": token},
 			dataType: "json",
 			data: JSON.stringify(args),
-			error: (jqXHR, textStatus, errorThrown) =>{
-				alert(`Error ${jqXHR.status}: ${jqXHR.responseText}`)
-			},
+			error: jqXHR => alert(`Error ${jqXHR.status}: ${jqXHR.responseText}`),
 			method: "POST",
 			success: success
 		});
 	}, "text");
+}
+
+const ajaxQueue: QueuedAjaxRequest[] = [];
+
+class QueuedAjaxRequest{
+	path: string;
+	options: JQuery.AjaxSettings;
+	completed: boolean = false;
+	_this = this;
+
+	constructor(path: string, options: JQuery.AjaxSettings){
+		this.path = path;
+		this.options = options;
+	}
+
+	dispatch(): void{
+		$.ajax(this.path, this.options);
+	}
+
+	onComplete(): void{
+		this.completed = true;
+		console.assert(this === ajaxQueue[0]);
+		ajaxQueue.shift();
+		if(ajaxQueue.length > 0){
+			ajaxQueue[0].dispatch();
+		}
+	}
+}
+
+function atomicPost(path: string, args: {}, success: JQuery.Ajax.SuccessCallback<any>, dataType?: string){
+	atomicAjax(path, {
+		dataType: dataType,
+		method: "POST",
+		data: args,
+		success: success
+	});
+}
+
+function atomicAjax(path: string, options: JQuery.AjaxSettings){
+	const request: QueuedAjaxRequest = new QueuedAjaxRequest(path, options);
+	const onComplete: () => void = () => request.onComplete();
+	if(options.success){
+		if(options.success.constructor === Array){
+			(<Array<any>> options.success).unshift(onComplete);
+		}else{
+			options.success = <JQuery.Ajax.SuccessCallback<any>[]> [onComplete, options.success];
+		}
+	}else{
+		options.success = [onComplete];
+	}
+	if(options.error){
+		if(options.error.constructor === Array){
+			(<Array<any>> options.error).unshift(onComplete);
+		}else{
+			options.error = <JQuery.Ajax.ErrorCallback<any>[]> [onComplete, options.error];
+		}
+	}else{
+		options.error = [onComplete];
+	}
+
+	ajaxQueue.push(request);
+	if(ajaxQueue.length === 1){
+		ajaxQueue[0].dispatch();
+	}
 }
 
 function login(){

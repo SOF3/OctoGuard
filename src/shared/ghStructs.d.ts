@@ -18,19 +18,9 @@ declare namespace GitHubAPI{
 		name: string;
 	}
 
-	const enum _RepositorySelection {
-		selected = "selected",
-		all = "all",
-	}
+	type RepositorySelection = ("selected" | "all") & string;
 
-	type RepositorySelection = _RepositorySelection & string;
-
-	const enum _Permission {
-		read = "read",
-		write = "write",
-	}
-
-	type Permission = _Permission & string;
+	type Permission = ("read" | "write") & string;
 
 	interface Installation{
 		id: number
