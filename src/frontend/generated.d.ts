@@ -10,3 +10,4 @@ declare const CommonConstants: {
 		displayName: string | null
 	} | null
 }
+declare const CoverageTypes: IProfileRuleCoverage

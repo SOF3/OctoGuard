@@ -7,3 +7,7 @@ declare interface NumberMapping<V>{
 }
 
 declare type TypeOrArray<T> = T | T[]
+
+declare interface Extends<T>{
+	new(...args): T
+}

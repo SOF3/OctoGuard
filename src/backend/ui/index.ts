@@ -3,6 +3,7 @@ import {Session} from "../session/Session"
 import {secrets} from "../secrets"
 import {IS_DEBUGGING, isRequestDebugger} from "../debug/debug"
 import {TriggeredError} from "../utils/TriggeredError"
+import * as coverage from "../profile/coverage"
 
 export const router = express.Router()
 
@@ -26,6 +27,7 @@ router.use((req, res, next) =>{
 		},
 		login: login
 	}
+	res.locals.CoverageTypes = coverage.types
 	next()
 })
 

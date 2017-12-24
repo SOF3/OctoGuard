@@ -7,7 +7,18 @@ export class Profile implements IProfile{
 	created: Date
 	updated: Date
 	visibility: ProfileVisibility
-	rules: IProfileRule[]
+	rules: IProfileRule[] = []
+
+	static fromRow(r: DProfile): Profile{
+		const p = new Profile
+		p.profileId = r.profileId
+		p.owner = r.owner
+		p.name = r.name
+		p.created = r.created
+		p.updated = r.updated
+		p.visibility = r.visibility
+		return p
+	}
 
 	static defaultProfile(ownerUid: number, regDate: Date): Profile{
 		const p = new Profile

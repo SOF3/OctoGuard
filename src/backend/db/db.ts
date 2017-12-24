@@ -19,7 +19,6 @@ export interface SqlError extends Error{
 	sqlMessage: string
 }
 
-
 export function reportError(err: SqlError){
 	console.error(`Error ${err.code} executing query: ${err.sqlMessage}`)
 	console.error(`Error at: '${err.sql}'`)
@@ -34,32 +33,32 @@ export class Join{
 		return `${this.type} JOIN \`${this.table}\` ON ${this.on}`
 	}
 
-	static INNER_ON(factorTable: TableRef, factorColumn: string, refTable: TableRef, refColumn: string): Join{
-		return Join.INNER(factorTable, `\`${factorTable}\`.\`${factorColumn}\` = \`${refTable}\`.\`${refColumn}\``)
+	static INNER_ON(motherTable: TableRef, motherColumn: string, satelliteTable: TableRef, satelliteColumn: string): Join{
+		return Join.INNER(motherTable, `\`${motherTable}\`.\`${motherColumn}\` = \`${satelliteTable}\`.\`${satelliteColumn}\``)
 	}
 
 	static INNER(table: TableRef, on: string): Join{
 		return new Join("INNER", table, on)
 	}
 
-	static LEFT_ON(factorTable: TableRef, factorColumn: string, refTable: TableRef, refColumn: string): Join{
-		return Join.LEFT(factorTable, `\`${factorTable}\`.\`${factorColumn}\` = \`${refTable}\`.\`${refColumn}\``)
+	static LEFT_ON(motherTable: TableRef, motherColumn: string, satelliteTable: TableRef, satelliteColumn: string): Join{
+		return Join.LEFT(motherTable, `\`${motherTable}\`.\`${motherColumn}\` = \`${satelliteTable}\`.\`${satelliteColumn}\``)
 	}
 
 	static LEFT(table: TableRef, on: string): Join{
 		return new Join("LEFT", table, on)
 	}
 
-	static INNER_RIGHT(factorTable: TableRef, factorColumn: string, refTable: TableRef, refColumn: string): Join{
-		return Join.RIGHT(factorTable, `\`${factorTable}\`.\`${factorColumn}\` = \`${refTable}\`.\`${refColumn}\``)
+	static INNER_RIGHT(motherTable: TableRef, motherColumn: string, satelliteTable: TableRef, satelliteColumn: string): Join{
+		return Join.RIGHT(motherTable, `\`${motherTable}\`.\`${motherColumn}\` = \`${satelliteTable}\`.\`${satelliteColumn}\``)
 	}
 
 	static RIGHT(table: TableRef, on: string): Join{
 		return new Join("RIGHT", table, on)
 	}
 
-	static OUTER_ON(factorTable: TableRef, factorColumn: string, refTable: TableRef, refColumn: string): Join{
-		return Join.OUTER(factorTable, `\`${factorTable}\`.\`${factorColumn}\` = \`${refTable}\`.\`${refColumn}\``)
+	static OUTER_ON(motherTable: TableRef, motherColumn: string, satelliteTable: TableRef, satelliteColumn: string): Join{
+		return Join.OUTER(motherTable, `\`${motherTable}\`.\`${motherColumn}\` = \`${satelliteTable}\`.\`${satelliteColumn}\``)
 	}
 
 	static OUTER(table: TableRef, on: string): Join{
@@ -73,13 +72,13 @@ export class Join{
 	}
 }
 
-type QueryArgument = string | number | boolean | Date | Buffer | null
-export type ResultSet<T extends StringMapping<CellValue>> = T[]
-export type CellValue = number | Date | Buffer | string
-type TableRef = string
+export type QueryArgument = string | number | boolean | Date | Buffer | null
+export type ResultSet<R extends StringMapping<CellValue>> = R[]
+export type TableRef = string
 type WhereClause = string | IWhereClause
 type WhereArgs = QueryArgument[] | IWhereClause
-type FieldRef = string | {toString(): string}
+export type FieldRef = string | {toString(): string}
+export type FieldList = StringMapping<FieldRef>
 
 function nop(): void{
 }
@@ -113,7 +112,7 @@ export interface DbErrorHandler{
 }
 
 export class SelectQuery{
-	fields: StringMapping<FieldRef>
+	fields: FieldList
 	fieldArgs: QueryArgument[] = []
 	from: TableRef
 	joins: Join[] = []
@@ -164,7 +163,7 @@ export class SelectQuery{
 			.concat(this.orderArgs)
 	}
 
-	execute<T extends StringMapping<CellValue>>(onSelect: (result: ResultSet<T>) => void, onError: DbErrorHandler){
+	execute<R extends StringMapping<CellValue>>(onSelect: (result: ResultSet<R>) => void, onError: DbErrorHandler){
 		select(this.createQuery(),
 			this.createArgs(),
 			onSelect,
@@ -176,7 +175,9 @@ export function qm(count: number){
 	return new Array(count).fill("?").join(",")
 }
 
-export function select<T extends StringMapping<CellValue>>(query: string, args: QueryArgument[], onSelect: (result: ResultSet<T>) => void, onError: DbErrorHandler){
+export function select<R extends StringMapping<CellValue>>(query: string, args: QueryArgument[], onSelect: (result: ResultSet<R>) => void, onError: DbErrorHandler){
+	console.debug("Executing query: ", query)
+	console.debug("Args:", args)
 	pool.query({
 		sql: query,
 		timeout: secrets.mysql.timeout,
