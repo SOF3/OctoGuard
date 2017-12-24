@@ -5,8 +5,8 @@ declare const CommonConstants: {
 		name: string
 	}
 	login: {
-		name: string;
-		uid: number;
-		displayName: string | null;
+		name: string
+		uid: number
+		displayName: string | null
 	} | null
-};
+}

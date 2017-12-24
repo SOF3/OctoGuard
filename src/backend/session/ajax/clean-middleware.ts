@@ -3,22 +3,22 @@ import {AjaxTokenEntry} from "./AjaxTokenEntry"
 import {Login} from "../Login"
 
 export function clean(req, res, next){
-	const session: Session = req.session;
+	const session: Session = req.session
 	if(session.ajaxTokens === undefined){
-		session.ajaxTokens = {};
+		session.ajaxTokens = {}
 	}else{
-		const now = new Date().getTime();
+		const now = (new Date).getTime()
 		for(const token in session.ajaxTokens){
 			if(session.ajaxTokens.hasOwnProperty(token)){
-				const entry: Object & AjaxTokenEntry = session.ajaxTokens[token];
+				const entry: Object & AjaxTokenEntry = session.ajaxTokens[token]
 				if(now > entry.expiry){
-					delete session.ajaxTokens[token];
+					delete session.ajaxTokens[token]
 				}
 			}
 		}
 	}
 	if(session.login === undefined){
-		session.login = new Login();
+		session.login = new Login
 	}
-	next();
+	next()
 }

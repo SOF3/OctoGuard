@@ -1,8 +1,8 @@
 declare namespace GitHubAPI{
 	interface Account{
-		login: string;
-		id: number;
-		type: string;
+		login: string
+		id: number
+		type: string
 	}
 
 	interface RepoOwner extends Account{
@@ -15,12 +15,12 @@ declare namespace GitHubAPI{
 	}
 
 	interface Repository{
-		name: string;
+		name: string
 	}
 
-	type RepositorySelection = ("selected" | "all") & string;
+	type RepositorySelection = ("selected" | "all") & string
 
-	type Permission = ("read" | "write") & string;
+	type Permission = ("read" | "write") & string
 
 	interface Installation{
 		id: number

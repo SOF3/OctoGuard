@@ -8,10 +8,11 @@ CREATE TABLE user (
 	onlineDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE profile (
-	pid     INT PRIMARY KEY,
-	owner   BIGINT UNSIGNED,
-	created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	pid        INT PRIMARY KEY,
+	owner      BIGINT UNSIGNED,
+	name       VARCHAR(256),
+	created    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	visibility INT, # public = 0, readers-only = 1, writers-only = 2, admins-only = 3
 	FOREIGN KEY (owner) REFERENCES user (uid)
 		ON DELETE SET NULL

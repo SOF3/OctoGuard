@@ -20,7 +20,7 @@ function emitObject(object, indents){
 		stream.write(type);
 		return;
 	}
-	if(object.constructor === Array){
+	if(object instanceof Array){
 		emitObject(object[0], indents + 1);
 		stream.write("[]");
 		return;
