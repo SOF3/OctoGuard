@@ -1,5 +1,5 @@
 import {GHErrorHandler} from "../gh/api"
-import {DBErrorHandler, reportError} from "../db/db"
+import {db} from "../db/db"
 import {Login} from "../session/login/Login"
 
 function _(name: string){
@@ -18,9 +18,9 @@ export function OnError_AR2GH(ar: ARErrorHandler): GHErrorHandler{
 	return ((message, statusCode) => ar(statusCode >= 400 ? statusCode : 500, message))
 }
 
-export function OnError_AR2DB(ar: ARErrorHandler): DBErrorHandler{
+export function OnError_AR2DB(ar: ARErrorHandler): db.DBErrorHandler{
 	return (error => {
-		reportError(error)
+		db.reportError(error)
 		ar(500, "Internal MySQL error")
 	})
 }

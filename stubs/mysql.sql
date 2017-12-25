@@ -1,20 +1,28 @@
+DROP TABLE IF EXISTS user_session;
+DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS rule_word_filter;
 DROP TABLE IF EXISTS rule_throttle;
 DROP TABLE IF EXISTS profile_rule;
 DROP TABLE IF EXISTS profile;
-DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS install;
+
 CREATE TABLE user (
 	uid        BIGINT UNSIGNED PRIMARY KEY,
 	name       VARCHAR(64) UNIQUE,
 	regDate    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	onlineDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE TABLE user_profile (
+CREATE TABLE user_session (
 	cookie CHAR(40) PRIMARY KEY,
-	uid BIGINT UNSIGNED,
-	creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY (uid) REFERENCES user(uid)
-	ON DELETE CASCADE
+	uid    BIGINT UNSIGNED,
+	touch  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	FOREIGN KEY (uid) REFERENCES user (uid)
+		ON DELETE CASCADE
+);
+CREATE TABLE install (
+	installId BIGINT PRIMARY KEY,
+	uid       BIGINT UNSIGNED,
+	KEY (uid)
 );
 CREATE TABLE profile (
 	pid        INT PRIMARY KEY,
@@ -23,7 +31,7 @@ CREATE TABLE profile (
 	created    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	visibility INT, # public = 0, organization-only = 1, collaborators-only = 2
-	FOREIGN KEY (owner) REFERENCES user (uid)
+	FOREIGN KEY (owner) REFERENCES install (uid)
 		ON DELETE SET NULL
 );
 CREATE TABLE profile_rule (
@@ -37,7 +45,7 @@ CREATE TABLE profile_rule (
 CREATE TABLE rule_word_filter (
 	rid       INT PRIMARY KEY,
 	word_list TEXT,
-	coverage INT, # see dbStructs.d.ts:ProfileRuleCoverageName for values
+	coverage  INT, # see dbStructs.d.ts:ProfileRuleCoverageName for values
 	FOREIGN KEY (rid) REFERENCES profile_rule (rid)
 		ON DELETE CASCADE
 );

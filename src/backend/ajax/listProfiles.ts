@@ -1,7 +1,6 @@
 import * as gh_api from "../gh/api"
 import {AjaxRequest, OnError_AR2DB, OnError_AR2GH} from "./knownEnds"
-import * as db from "../db/db"
-import {DBErrorHandler} from "../db/db"
+import {db} from "../db/db"
 import {Profile} from "../profile/Profile"
 import {ProfileRule, ProfileRuleTypes} from "../profile/ProfileRule"
 import {Object_size} from "../utils/helper"
@@ -34,7 +33,7 @@ export = (req: AjaxRequest<ListProfilesReq, ListProfilesRes>) =>{
 	}, OnError_AR2GH(req.onError))
 }
 
-function onProfileListed(profileResultSet: db.ResultSet<DProfile>, consume: Function, uids: number[], installs: StringMap<Installation>, onError: DBErrorHandler, login: Login){
+function onProfileListed(profileResultSet: db.ResultSet<DProfile>, consume: Function, uids: number[], installs: StringMap<Installation>, onError: db.DBErrorHandler, login: Login){
 	const profiles: StringMap<IProfile> = {}
 	for(const i in profileResultSet){
 		profiles[profileResultSet[i].profileId] = Profile.fromRow(profileResultSet[i])

@@ -1,2 +1,2 @@
 export * from "./router"
-export * from "./clean-middleware"
+export * from "./clean"

@@ -8,13 +8,13 @@ import * as less_middleware from "less-middleware"
 import {TriggeredError} from "./utils/TriggeredError"
 import * as ajax from "./session/ajax/index"
 import * as login from "./session/login"
+import {clean} from "./session/login"
 import * as debug from "./debug/debug"
 import * as index from "./ui/index"
 import * as flow from "./session/flow"
 import * as webhook from "./webhook/webhook"
 import {secrets} from "./secrets"
 import * as coverage from "./profile/coverage"
-import {clean} from "./session/login/clean"
 
 const app = express()
 

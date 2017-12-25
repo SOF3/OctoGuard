@@ -1,4 +1,4 @@
-import * as db from "../../db/db"
+import {db} from "../../db/db"
 
 export class Login{
 	loggedIn: boolean = false
@@ -24,6 +24,7 @@ export class Login{
 			name: name,
 			onlineDate: new Date,
 		}, db.reportError)
+
 		db.select("SELECT regDate FROM user WHERE uid = ?", [uid], result =>{
 			this.regDate = <Date> result[0].regDate
 		}, db.reportError)

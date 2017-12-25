@@ -1,4 +1,4 @@
-import * as db from "../db/db"
+import {db} from "../db/db"
 import * as coverage from "./coverage"
 
 export abstract class ProfileRule implements IProfileRule{

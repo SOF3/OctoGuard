@@ -37,6 +37,7 @@ function continueLoginFlow(req, res){
 			console.info(`Login ${user.login}!`)
 			const login: Login = req.login
 			login.login(user.id, user.login, user.name === null ? user.login : user.name, token)
+
 			res.redirect("/")
 		}, (message, statusCode) =>{
 			res.status(500)

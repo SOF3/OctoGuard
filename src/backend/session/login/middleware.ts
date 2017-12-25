@@ -1,7 +1,8 @@
 import {Login} from "./Login"
 import * as crypto from "crypto"
+import {db} from "../../db/db"
 
-export const loginCookies = {}
+export const loginCookies: StringMap<Login> = {}
 
 export function middleware(req, res, next){
 	const cont = (cookie: string) =>{
@@ -10,8 +11,14 @@ export function middleware(req, res, next){
 			next()
 			return
 		}
-		req.login = loginCookies[cookie]
+		const login = req.login = loginCookies[cookie]
 		req.login.touch = new Date()
+		db.keyInsert("user_session", {
+			cookie: cookie,
+		}, {
+			uid: login.uid,
+		}, db.reportError)
+		db.update("user", {onlineDate: new Date}, "uid = ?", [login.uid], db.reportError)
 		next()
 	}
 
