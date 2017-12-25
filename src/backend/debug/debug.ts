@@ -13,7 +13,8 @@ export const router = express.Router()
 		}
 		next()
 	})
-	.get("/dump-session", require("./dumpSession"))
+
+// .get("/dump-session", require("./dumpSession"))
 
 export function isRequestDebugger(req): boolean{
 	return isDebugger(req.connection.remoteAddress)

@@ -5,15 +5,16 @@ import * as logger from "morgan"
 import * as cookie_parser from "cookie-parser"
 import * as body_parser from "body-parser"
 import * as less_middleware from "less-middleware"
-import * as session from "express-session"
 import {TriggeredError} from "./utils/TriggeredError"
-import * as ajax from "./session/ajax/ajax"
+import * as ajax from "./session/ajax/index"
+import * as login from "./session/login"
 import * as debug from "./debug/debug"
 import * as index from "./ui/index"
 import * as flow from "./session/flow"
 import * as webhook from "./webhook/webhook"
-import {Session} from "./session/Session"
 import {secrets} from "./secrets"
+import * as coverage from "./profile/coverage"
+import {clean} from "./session/login/clean"
 
 const app = express()
 
@@ -28,17 +29,10 @@ app.use(body_parser.urlencoded({extended: false}))
 app.use(cookie_parser())
 app.use(less_middleware(path.join(__dirname, "..", "public")))
 app.use(express.static(path.join(__dirname, "..", "public")))
-app.use(session({
-	secret: secrets.cookieSecrets,
-	name: "OctoGuardSession",
-	resave: false,
-	saveUninitialized: false,
-	cookie: {
-		maxAge: 86400e+3,
-	}
-}))
 
 app.use(ajax.clean)
+app.use(clean)
+app.use(login.middleware)
 
 app.use("/ajax", ajax.router)
 app.use("/debug", debug.router)
@@ -74,20 +68,19 @@ app.use((err: Error | TriggeredError, req, res, next) =>{
 		res.status(500)
 	}
 
-	const session: Session | null = req.session
-	const login = session && session.login && session.login.loggedIn ? {
-		name: session.login.name,
-		uid: session.login.uid,
-		displayName: session.login.displayName
-	} : null
 	res.locals.CommonConstants = {
 		ghApp: {
 			id: secrets.ghApp.id,
 			clientId: secrets.ghApp.clientId,
 			name: secrets.ghApp.name,
 		},
-		login: login
+		login: req.login && req.login.loggedIn ? {
+			name: req.login.name,
+			uid: req.login.uid,
+			displayName: req.login.displayName,
+		} : null,
 	}
+	res.locals.CoverageTypes = coverage.types
 
 	res.render(err instanceof TriggeredError ? err.template : "error", {
 		title: title,

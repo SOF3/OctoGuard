@@ -6,8 +6,7 @@ function ajax(path: string, args: ReqSuper, success: JQuery.Ajax.SuccessCallback
 	if(path.charAt(0) !== "/"){
 		path = "/" + path
 	}
-	atomicPost("/ajax/request", {path: path}, token =>{
-		atomicAjax("/ajax" + path, {
+	$.post("/ajax/request", {path: path}, token => console.log(token) || $.ajax("/ajax" + path, {
 			contentType: "application/json",
 			headers: {"X-Ajax-Token": token},
 			dataType: "json",
@@ -16,7 +15,7 @@ function ajax(path: string, args: ReqSuper, success: JQuery.Ajax.SuccessCallback
 			method: "POST",
 			success: success
 		})
-	}, "text")
+		, "text")
 }
 
 const ajaxQueue: QueuedAjaxRequest[] = []

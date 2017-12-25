@@ -5,13 +5,13 @@ import {DBErrorHandler} from "../db/db"
 import {Profile} from "../profile/Profile"
 import {ProfileRule, ProfileRuleTypes} from "../profile/ProfileRule"
 import {Object_size} from "../utils/helper"
-import {Session} from "../session/Session"
+import {Login} from "../session/login/Login"
 import Installation = GitHubAPI.Installation
 
 export = (req: AjaxRequest<ListProfilesReq, ListProfilesRes>) =>{
 	const onError = OnError_AR2DB(req.onError)
 
-	gh_api.listInstalls(req.session.login.token, (installations: Installation[]) =>{
+	gh_api.listInstalls(req.login.token, (installations: Installation[]) =>{
 		const installs: StringMap<Installation> = {}
 		const uids: number[] = []
 		for(let i = 0; i < installations.length; ++i){
@@ -30,11 +30,11 @@ export = (req: AjaxRequest<ListProfilesReq, ListProfilesRes>) =>{
 		}
 		profilesQuery.from = "profile"
 		profilesQuery.where = profilesQuery.whereArgs = new db.ListWhereClause("owner", uids)
-		profilesQuery.execute((result: db.ResultSet<DProfile>) => onProfileListed(result, req.consume, uids, installs, onError, req.session), onError)
+		profilesQuery.execute((result: db.ResultSet<DProfile>) => onProfileListed(result, req.consume, uids, installs, onError, req.login), onError)
 	}, OnError_AR2GH(req.onError))
 }
 
-function onProfileListed(profileResultSet: db.ResultSet<DProfile>, consume: Function, uids: number[], installs: StringMap<Installation>, onError: DBErrorHandler, session: Session){
+function onProfileListed(profileResultSet: db.ResultSet<DProfile>, consume: Function, uids: number[], installs: StringMap<Installation>, onError: DBErrorHandler, login: Login){
 	const profiles: StringMap<IProfile> = {}
 	for(const i in profileResultSet){
 		profiles[profileResultSet[i].profileId] = Profile.fromRow(profileResultSet[i])
@@ -66,13 +66,13 @@ function onProfileListed(profileResultSet: db.ResultSet<DProfile>, consume: Func
 			}
 			ruleTypesLeft--
 			if(ruleTypesLeft === 0){
-				sendResult(consume, installs, profiles, session)
+				sendResult(consume, installs, profiles, login)
 			}
 		}, onError)
 	}
 }
 
-function sendResult(consume: Function, installs: StringMap<Installation>, profiles: StringMap<IProfile>, session: Session){
+function sendResult(consume: Function, installs: StringMap<Installation>, profiles: StringMap<IProfile>, login: Login){
 	for(const installId in installs){
 		const install: Installation & {profiles?: StringMap<IProfile>} = installs[installId]
 		const orgProfiles = install.profiles = {} as StringMap<IProfile>
@@ -83,7 +83,7 @@ function sendResult(consume: Function, installs: StringMap<Installation>, profil
 			}
 		}
 		if(Object_size(orgProfiles) === 0){
-			orgProfiles[-1] = Profile.defaultProfile(install.account.id, session.login.regDate)
+			orgProfiles[-1] = Profile.defaultProfile(install.account.id, login.regDate)
 		}
 	}
 	consume({installations: installs})

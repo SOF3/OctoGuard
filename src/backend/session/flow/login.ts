@@ -1,9 +1,9 @@
-import {Session} from "../Session"
 import {TriggeredError} from "../../utils/TriggeredError"
 import * as curl from "request"
 import * as query_string from "query-string"
 import * as gh_api from "../../gh/api"
-import {Login} from "../Login"
+import {Login} from "../login/Login"
+import * as ajax from "../ajax/index"
 import {secrets} from "../../secrets"
 
 export function loginFlow(req, res, next){
@@ -11,15 +11,14 @@ export function loginFlow(req, res, next){
 		next(new TriggeredError("Missing GET parameter code or state", 400))
 		return
 	}
-	const session: Session = req.session
-	if(!session.ajaxTokens.hasOwnProperty(req.query.state)){
+	if(!ajax.tokenStore.hasOwnProperty(req.query.state)){
 		next(new TriggeredError("You spent more than 5 minutes to login. Please try again.\n" +
 			"If it still does not work, please make sure you have enabled cookies.\n" +
 			"If you have been redirected from a third-party website (other than OctoGuard and GitHub), please do not " +
 			"proceed, because the third-party website may be a phishing website.", 401, "error-relog"))
 		return
 	}
-	delete session.ajaxTokens[req.query.state]
+	delete ajax.tokenStore[req.query.state]
 
 	curl.post("https://github.com/login/oauth/access_token", {
 		form: {
@@ -36,8 +35,8 @@ function continueLoginFlow(req, res){
 		const {access_token: token}: {access_token: string} = query_string.parse(body)
 		gh_api.whoAmI(token, user =>{
 			console.info(`Login ${user.login}!`)
-			const login: Login = req.session.login
-			Login.login(login, user.id, user.login, user.name === null ? user.login : user.name, token)
+			const login: Login = req.login
+			login.login(user.id, user.login, user.name === null ? user.login : user.name, token)
 			res.redirect("/")
 		}, (message, statusCode) =>{
 			res.status(500)

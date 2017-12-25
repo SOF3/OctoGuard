@@ -1,6 +1,6 @@
-import {Session} from "../session/Session"
 import {GHErrorHandler} from "../gh/api"
 import {DBErrorHandler, reportError} from "../db/db"
+import {Login} from "../session/login/Login"
 
 function _(name: string){
 	return require(`./${name}`)
@@ -26,13 +26,13 @@ export function OnError_AR2DB(ar: ARErrorHandler): DBErrorHandler{
 }
 
 export class AjaxRequest<Q extends ReqSuper, S extends ResSuper>{
-	session: Session
+	login: Login
 	args: Q
 	consume: (response: S) => void
 	onError: (status: number, message: string) => void
 
-	constructor(session: Session, args: Q, consume: (response: S) => void, error: (status: number, message: string) => void){
-		this.session = session
+	constructor(login: Login, args: Q, consume: (response: S) => void, error: (status: number, message: string) => void){
+		this.login = login
 		this.args = args
 		this.consume = consume
 		this.onError = error

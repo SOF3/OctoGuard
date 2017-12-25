@@ -1,5 +1,4 @@
 import * as express from "express"
-import {Session} from "../session/Session"
 import {secrets} from "../secrets"
 import {IS_DEBUGGING, isRequestDebugger} from "../debug/debug"
 import {TriggeredError} from "../utils/TriggeredError"
@@ -13,11 +12,10 @@ router.use((req, res, next) =>{
 		next(new TriggeredError("Server is under maintenance.", 403))
 		return
 	}
-	const session: Session = req.session
-	const login = session.login.loggedIn ? {
-		name: session.login.name,
-		uid: session.login.uid,
-		displayName: session.login.displayName
+	const login = req.login.loggedIn ? {
+		name: req.login.name,
+		uid: req.login.uid,
+		displayName: req.login.displayName,
 	} : null
 	res.locals.CommonConstants = {
 		ghApp: {
@@ -32,7 +30,7 @@ router.use((req, res, next) =>{
 })
 
 router.get("/", (req, res) =>{
-	if(req.session.login.loggedIn){
+	if(req.login.loggedIn){
 		res.render("index-member", {
 			title: "OctoGuard"
 		})
