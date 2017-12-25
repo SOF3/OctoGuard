@@ -20,7 +20,7 @@ export namespace db{
 		sqlMessage: string
 	}
 
-	export function reportError(err: SqlError){
+	export const reportError: DBErrorHandler = (err: SqlError) =>{
 		console.error(`Error ${err.code} executing query: ${err.sqlMessage}`)
 		console.error(`Error at: '${err.sql}'`)
 	}
@@ -197,9 +197,9 @@ export namespace db{
 	export function keyInsert(table: TableRef, staticFields: StringMap<QueryArgument | null>, updateFields: StringMap<QueryArgument | null>, onError: DBErrorHandler, onInsert: (insertId: number) => void = nop){
 		const mergedFields: StringMap<QueryArgument | null> = Object.assign({}, staticFields, updateFields)
 		insert(`INSERT INTO \`${table}\`
-		(${Object.keys(mergedFields).map(col => "`" + col + "`").join(",")})
-		VALUES (${qm(Object_size(mergedFields))})
-		ON DUPLICATE KEY UPDATE ${Object.keys(updateFields).map(col => `\`${col}\` = ?`).join(",")}`,
+			(${Object.keys(mergedFields).map(col => "`" + col + "`").join(",")})
+			VALUES (${qm(Object_size(mergedFields))})
+			ON DUPLICATE KEY UPDATE ${Object.keys(updateFields).map(col => `\`${col}\` = ?`).join(",")}`,
 			Object.values(mergedFields).concat(Object.values(updateFields)), onError, onInsert)
 	}
 
@@ -218,11 +218,11 @@ export namespace db{
 		})
 	}
 
-	export function update(table: TableRef, set: StringMap<QueryArgument | null>, where: WhereClause, whereArgs: WhereArgs = [], onError: DBErrorHandler, onUpdated: (changedRows) => void = nop){
+	export function update(table: TableRef, set: StringMap<QueryArgument | null>, where: WhereClause, whereArgs: WhereArgs, onError: DBErrorHandler, onUpdated: (changedRows) => void = nop){
 		pool.query({
 			sql: `UPDATE \`${table}\`
-			SET ${Object.keys(set).map(column => `\`${column}\` = ?`).join(",")}
-			WHERE ${where}`,
+				SET ${Object.keys(set).map(column => `\`${column}\` = ?`).join(",")}
+				WHERE ${where}`,
 			values: Object.values(set).concat(whereArgs instanceof Array ? whereArgs : whereArgs.getArgs()),
 			timeout: secrets.mysql.timeout,
 		}, (err, results, fields) =>{
@@ -230,6 +230,18 @@ export namespace db{
 				onError(err)
 			}else{
 				onUpdated(results.changedRows)
+			}
+		})
+	}
+
+	export function del(table: TableRef, where: WhereClause, whereArgs: WhereArgs, onError: DBErrorHandler){
+		pool.query({
+			sql: `DELETE FROM \`${table}\` WHERE ${where}`,
+			values: whereArgs instanceof Array ? whereArgs : whereArgs.getArgs(),
+			timeout: secrets.mysql.timeout,
+		}, (err: SqlError, results, fields) =>{
+			if(err){
+				onError(err)
 			}
 		})
 	}

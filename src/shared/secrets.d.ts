@@ -6,6 +6,7 @@ export namespace OctoGuard{
 			clientId: string
 			name: string
 			secret: string
+			webhookSecret: string
 		}
 		oAuthApp: {
 			id: string

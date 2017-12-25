@@ -1,2 +1,2 @@
 export * from "./middleware"
-export {clean} from "./clean"
+export * from "./clean"

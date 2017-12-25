@@ -1,9 +1,8 @@
 import * as express from "express"
 import {TriggeredError} from "../utils/TriggeredError"
+import {secrets} from "../secrets"
 
-const secrets = require("../secrets")
-
-export const IS_DEBUGGING = true
+export const IS_DEBUGGING: boolean = true
 
 export const router = express.Router()
 	.use((req, res, next) =>{
@@ -21,5 +20,5 @@ export function isRequestDebugger(req): boolean{
 }
 
 export function isDebugger(address: string): boolean{
-	return secrets.secrets.debug.addresses.indexOf(address) !== -1
+	return secrets.debug.addresses.indexOf(address) !== -1
 }

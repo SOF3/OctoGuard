@@ -1,4 +1,5 @@
 import {loginCookies} from "./index"
+import {db} from "../../db/db"
 
 export function clean(req, res, next){
 	for(let cookie in loginCookies){
@@ -7,4 +8,8 @@ export function clean(req, res, next){
 		}
 	}
 	next()
+}
+
+export function cleanDb(){
+	db.del("user_session", "UNIX_TIMESTAMP() - UNIX_TIMESTAMP(touch) > 604800", [], db.reportError)
 }

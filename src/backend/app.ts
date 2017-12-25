@@ -24,12 +24,15 @@ app.locals.escapeHtml = require("escape-html")
 
 app.use(favicon(path.join(__dirname, "..", "public", "favicon.ico")))
 app.use(logger("dev"))
-app.use(body_parser.json())
-app.use(body_parser.urlencoded({extended: false}))
 app.use(cookie_parser())
 app.use(less_middleware(path.join(__dirname, "..", "public")))
 app.use(express.static(path.join(__dirname, "..", "public")))
 
+// place this above body_parser according to https://github.com/expressjs/body-parser/issues/152#issuecomment-173674178
+app.use("/gh/webhook", webhook.router)
+
+app.use(body_parser.json())
+app.use(body_parser.urlencoded({extended: false}))
 app.use(ajax.clean)
 app.use(clean)
 app.use(login.middleware)
@@ -38,7 +41,6 @@ app.use("/ajax", ajax.router)
 app.use("/debug", debug.router)
 app.get("/gh/callback/auth", flow.loginFlow)
 app.get("/gh/callback/setup", flow.setupFlow)
-app.use("/gh/webhook", webhook.entry)
 app.use("/", index.router)
 
 // catch 404 and forward to error handler
@@ -88,5 +90,7 @@ app.use((err: Error | TriggeredError, req, res, next) =>{
 		trace: debug.isRequestDebugger(req) ? err.stack : ""
 	})
 })
+
+setInterval(login.cleanDb)
 
 export = app
