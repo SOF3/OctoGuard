@@ -73,12 +73,12 @@ export class Join{
 }
 
 export type QueryArgument = string | number | boolean | Date | Buffer | null
-export type ResultSet<R extends StringMapping<CellValue>> = R[]
+export type ResultSet<R extends StringMap<CellValue>> = R[]
 export type TableRef = string
 type WhereClause = string | IWhereClause
 type WhereArgs = QueryArgument[] | IWhereClause
 export type FieldRef = string | {toString(): string}
-export type FieldList = StringMapping<FieldRef>
+export type FieldList = StringMap<FieldRef>
 
 function nop(): void{
 }
@@ -107,7 +107,7 @@ export class ListWhereClause implements IWhereClause{
 	}
 }
 
-export interface DbErrorHandler{
+export interface DBErrorHandler{
 	(error: SqlError): void
 }
 
@@ -130,7 +130,9 @@ export class SelectQuery{
 	createQuery(): string{
 		let select_expr: string[] = []
 		for(const key in this.fields){
-			select_expr.push(`${this.fields[key]} AS \`${key}\``)
+			if(this.fields.hasOwnProperty(key)){
+				select_expr.push(`${this.fields[key]} AS \`${key}\``)
+			}
 		}
 		return `SELECT ${select_expr.join(",")} FROM \`${this.from}\`
 			${this.joins.map(join => join.toString()).join(" ")}
@@ -163,7 +165,7 @@ export class SelectQuery{
 			.concat(this.orderArgs)
 	}
 
-	execute<R extends StringMapping<CellValue>>(onSelect: (result: ResultSet<R>) => void, onError: DbErrorHandler){
+	execute<R extends StringMap<CellValue>>(onSelect: (result: ResultSet<R>) => void, onError: DBErrorHandler){
 		select(this.createQuery(),
 			this.createArgs(),
 			onSelect,
@@ -175,13 +177,13 @@ export function qm(count: number){
 	return new Array(count).fill("?").join(",")
 }
 
-export function select<R extends StringMapping<CellValue>>(query: string, args: QueryArgument[], onSelect: (result: ResultSet<R>) => void, onError: DbErrorHandler){
-	console.debug("Executing query: ", query)
+export function select<R extends StringMap<CellValue>>(query: string, args: QueryArgument[], onSelect: (result: ResultSet<R>) => void, onError: DBErrorHandler){
+	console.debug("Executing query: ", query.trim())
 	console.debug("Args:", args)
 	pool.query({
 		sql: query,
 		timeout: secrets.mysql.timeout,
-		values: args
+		values: args,
 	}, (err: SqlError, results, fields) =>{
 		if(err){
 			onError(err)
@@ -191,8 +193,8 @@ export function select<R extends StringMapping<CellValue>>(query: string, args: 
 	})
 }
 
-export function keyInsert(table: TableRef, staticFields: StringMapping<QueryArgument | null>, updateFields: StringMapping<QueryArgument | null>, onError: DbErrorHandler, onInsert: (insertId: number) => void = nop){
-	const mergedFields: StringMapping<QueryArgument | null> = Object.assign({}, staticFields, updateFields)
+export function keyInsert(table: TableRef, staticFields: StringMap<QueryArgument | null>, updateFields: StringMap<QueryArgument | null>, onError: DBErrorHandler, onInsert: (insertId: number) => void = nop){
+	const mergedFields: StringMap<QueryArgument | null> = Object.assign({}, staticFields, updateFields)
 	insert(`INSERT INTO \`${table}\`
 		(${Object.keys(mergedFields).map(col => "`" + col + "`").join(",")})
 		VALUES (${qm(Object_size(mergedFields))})
@@ -200,7 +202,7 @@ export function keyInsert(table: TableRef, staticFields: StringMapping<QueryArgu
 		Object.values(mergedFields).concat(Object.values(updateFields)), onError, onInsert)
 }
 
-export function insert(query: string, args: QueryArgument[], onError: DbErrorHandler, onInsert: (insertId: number) => void){
+export function insert(query: string, args: QueryArgument[], onError: DBErrorHandler, onInsert: (insertId: number) => void){
 	console.debug("MySQL query: " + query)
 	pool.query({
 		sql: query,
@@ -215,12 +217,12 @@ export function insert(query: string, args: QueryArgument[], onError: DbErrorHan
 	})
 }
 
-export function update(table: TableRef, set: StringMapping<QueryArgument | null>, where: WhereClause, whereArgs: QueryArgument[] = [], onError: DbErrorHandler, onUpdated: (changedRows) => void = nop){
+export function update(table: TableRef, set: StringMap<QueryArgument | null>, where: WhereClause, whereArgs: WhereArgs = [], onError: DBErrorHandler, onUpdated: (changedRows) => void = nop){
 	pool.query({
 		sql: `UPDATE \`${table}\`
 			SET ${Object.keys(set).map(column => `\`${column}\` = ?`).join(",")}
 			WHERE ${where}`,
-		values: Object.values(set).concat(whereArgs),
+		values: Object.values(set).concat(whereArgs instanceof Array ? whereArgs : whereArgs.getArgs()),
 		timeout: secrets.mysql.timeout
 	}, (err, results, fields) =>{
 		if(err){

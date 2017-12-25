@@ -59,7 +59,7 @@ export type ProfileRuleImpl = Extends<ProfileRule> & {
 	table: string
 	fields: db.FieldList
 
-	fromRow(row: StringMapping<CellValue>): ProfileRule
+	fromRow(row: StringMap<CellValue>): ProfileRule
 }
 
 export const ProfileRuleTypes: ProfileRuleImpl[] = [

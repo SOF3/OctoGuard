@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS rule_word_filter;
+DROP TABLE IF EXISTS rule_throttle;
 DROP TABLE IF EXISTS profile_rule;
 DROP TABLE IF EXISTS profile;
 DROP TABLE IF EXISTS user;
@@ -30,11 +32,13 @@ CREATE TABLE rule_word_filter (
 	word_list TEXT,
 	coverage INT, # see dbStructs.d.ts:ProfileRuleCoverageName for values
 	FOREIGN KEY (rid) REFERENCES profile_rule (rid)
+		ON DELETE CASCADE
 );
 CREATE TABLE rule_throttle (
 	rid    INT PRIMARY KEY,
 	max    INT,
 	period INT, # in milliseconds
 	FOREIGN KEY (rid) REFERENCES profile_rule (rid)
+		ON DELETE CASCADE
 );
-show tables;
+SHOW TABLES;

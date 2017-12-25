@@ -2,7 +2,7 @@ declare type ProfileVisibility = "public" | "organization" | "collaborator"
 
 declare type CellValue = number | Date | Buffer | string
 
-declare interface DProfile extends StringMapping<CellValue>{
+declare interface DProfile extends StringMap<CellValue>{
 	profileId: number
 	owner: number
 	name: string
@@ -21,7 +21,7 @@ declare interface IProfile{
 	rules: IProfileRule[]
 }
 
-declare interface DProfileRule extends StringMapping<CellValue>{
+declare interface DProfileRule extends StringMap<CellValue>{
 	ruleId: number
 	profileId: number
 	updated: Date

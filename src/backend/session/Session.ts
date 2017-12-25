@@ -3,6 +3,6 @@ import {AjaxTokenEntry} from "./ajax/AjaxTokenEntry"
 
 export interface Session{
 	queueId: string
-	ajaxTokens?: StringMapping<AjaxTokenEntry>
+	ajaxTokens?: StringMap<AjaxTokenEntry>
 	login: Login | undefined
 }

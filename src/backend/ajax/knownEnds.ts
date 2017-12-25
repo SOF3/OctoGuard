@@ -1,6 +1,6 @@
 import {Session} from "../session/Session"
 import {GHErrorHandler} from "../gh/api"
-import {DbErrorHandler, reportError} from "../db/db"
+import {DBErrorHandler, reportError} from "../db/db"
 
 function _(name: string){
 	return require(`./${name}`)
@@ -14,10 +14,11 @@ export interface ARErrorHandler{
 	(status: number, message: string): void
 }
 
-export function ARErrorHandler2GhErrorHandler(ar: ARErrorHandler): GHErrorHandler{
+export function OnError_AR2GH(ar: ARErrorHandler): GHErrorHandler{
 	return ((message, statusCode) => ar(statusCode >= 400 ? statusCode : 500, message))
 }
-export function ARErrorHandler2DbErrorHandler(ar: ARErrorHandler): DbErrorHandler{
+
+export function OnError_AR2DB(ar: ARErrorHandler): DBErrorHandler{
 	return (error => {
 		reportError(error)
 		ar(500, "Internal MySQL error")
@@ -38,7 +39,7 @@ export class AjaxRequest<Q extends ReqSuper, S extends ResSuper>{
 	}
 }
 
-export const knownEnds: StringMapping<ARH<any, any>> = {
+export const knownEnds: StringMap<ARH<any, any>> = {
 	listProfiles: <ARH<ListProfilesReq, ListProfilesRes>>_("listProfiles"),
 	installDetails: <ARH<InstallDetailsReq, InstallDetailsRes>>_("installDetails"),
 }

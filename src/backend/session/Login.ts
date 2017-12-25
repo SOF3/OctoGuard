@@ -1,5 +1,4 @@
 import * as db from "../db/db"
-import {reportError} from "../db/db"
 
 export class Login{
 	loggedIn: boolean = false
@@ -7,6 +6,7 @@ export class Login{
 	name: string | null
 	displayName: string | null
 	token: string | null
+	regDate: Date
 
 	static login(login: Login, uid: number, name: string, displayName: string, token: string): void{
 		login.loggedIn = true
@@ -14,6 +14,7 @@ export class Login{
 		login.name = name
 		login.displayName = displayName
 		login.token = token
+		login.regDate = new Date()
 
 		db.keyInsert("user", {
 			uid: uid,
@@ -21,6 +22,9 @@ export class Login{
 		}, {
 			name: name,
 			onlineDate: new Date,
-		}, error => reportError(error))
+		}, db.reportError)
+		db.select("SELECT regDate FROM user WHERE uid = ?", [uid], result =>{
+			login.regDate = <Date> result[0].regDate
+		}, db.reportError)
 	}
 }

@@ -1,11 +1,6 @@
-declare interface StringMapping<V>{
+declare interface StringMap<V>{
 	[key: string]: V
 }
-
-declare interface NumberMapping<V>{
-	[key: number]: V
-}
-
 declare type TypeOrArray<T> = T | T[]
 
 declare interface Extends<T>{
