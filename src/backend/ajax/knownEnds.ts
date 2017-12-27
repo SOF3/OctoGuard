@@ -18,7 +18,7 @@ export function OnError_AR2GH(ar: ARErrorHandler): GHErrorHandler{
 	return ((message, statusCode) => ar(statusCode >= 400 ? statusCode : 500, message))
 }
 
-export function OnError_AR2DB(ar: ARErrorHandler): db.DBErrorHandler{
+export function OnError_AR2DB(ar: ARErrorHandler): db.ErrorHandler{
 	return (error => {
 		db.reportError(error)
 		ar(500, "Internal MySQL error")

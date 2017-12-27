@@ -127,5 +127,7 @@ declare namespace GitHubAPI{
 		created_at: string
 		updated_at: string
 		single_file_name: string // = .octoguard.yml
+
+		profiles: StringMap<IProfile> // inserted by listProfiles
 	}
 }

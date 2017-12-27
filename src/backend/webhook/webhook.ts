@@ -2,7 +2,9 @@ import * as express from "express"
 import * as body_parser from "body-parser"
 import * as crypto from "crypto"
 import {secrets} from "../secrets"
-import {WebhookHandler} from "./interface"
+import {BaseWebhookPayload, WebhookHandler} from "./interface"
+import {db} from "../db/db"
+import {Profile} from "../profile/Profile"
 
 export const router = express.Router()
 
@@ -22,10 +24,17 @@ router.use(body_parser.json({
 }))
 
 const handlerTypes: StringMap<WebhookHandler> = {
-	ping: require("./events/ping"),
 	issues: require("./events/issues"),
 	issue_comment: require("./events/issue_comment"),
-
+	membership: require("./events/membership"),
+	organization: require("./events/organization"),
+	pull_request: require("./events/pull_request"),
+	pull_request_review: require("./events/pull_request_review"),
+	pull_request_review_comment: require("./events/pull_request_review_comment"),
+	repository: require("./events/repository"),
+	team: require("./events/team"),
+	team_add: require("./events/team_add"),
+	watch: require("./events/watch"),
 }
 
 router.post("/", (req, res) =>{
@@ -37,7 +46,42 @@ router.post("/", (req, res) =>{
 		return
 	}
 
-	handlerTypes[event].handle(req.body, res)
+	const reportError: db.ErrorHandler = (error: db.SqlError) =>{
+		reportError(error)
+		res.status(500).send("Database error")
+	}
+
+	const locateProfile = (profileId) =>{
+		const query = Profile.baseQuery()
+		query.where = "profileId = ?"
+		query.whereArgs = [profileId]
+		query.execute((result: db.ResultSet<DProfile>) =>{
+			payload.profile = Profile.fromRow(result[0])
+			handlerTypes[event].handle(payload, res)
+		}, reportError)
+	}
+
+	const payload: BaseWebhookPayload = req.body
+	db.select("SELECT profileId FROM repo_profile_map WHERE repoId = ?", [payload.repository.id], result =>{
+		if(result.length > 0){
+			locateProfile(result[0].pid)
+			return
+		}
+		db.select("SELECT profileId FROM install_profile_map WHERE installId = ?", [payload.installation.id], result =>{
+			if(result.length > 0){
+				locateProfile(result[0].pid)
+				return
+			}
+			db.select("SELECT profileId FROM profile WHERE owner = ? AND name = ?", [payload.repository.owner.id, Profile.DEFAULT_NAME], result =>{
+				if(result.length > 0){
+					locateProfile(result[0].pid)
+					return
+				}
+				payload.profile = Profile.defaultProfile(payload.repository.owner.id, new Date) // the regDate doesn't matter here
+				handlerTypes[event].handle(payload, res)
+			}, reportError)
+		}, reportError)
+	}, reportError)
 })
 
 router.use("/", (req, res) =>{

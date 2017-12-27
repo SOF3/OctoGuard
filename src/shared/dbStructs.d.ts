@@ -25,14 +25,12 @@ declare interface DProfileRule extends StringMap<CellValue>{
 	ruleId: number
 	profileId: number
 	updated: Date
-	type: string
 }
 
 declare interface IProfileRule{
 	ruleId: number
 	profileId: number
 	updated: Date
-	type: string
 }
 
 declare interface IProfileRuleCoverage {

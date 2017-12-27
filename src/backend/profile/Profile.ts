@@ -1,3 +1,5 @@
+import {db} from "../db/db"
+
 export class Profile implements IProfile{
 	static DEFAULT_NAME = "Default Profile"
 
@@ -8,6 +10,20 @@ export class Profile implements IProfile{
 	updated: Date
 	visibility: ProfileVisibility
 	rules: IProfileRule[] = []
+
+	static baseQuery(): db.SelectQuery{
+		const query = new db.SelectQuery
+		query.fields = {
+			profileId: "profileId",
+			owner: "owner",
+			name: "name",
+			created: "created",
+			updated: "updated",
+			visibility: "visibility",
+		}
+		query.from = "profile"
+		return query
+	}
 
 	static fromRow(r: DProfile): Profile{
 		const p = new Profile

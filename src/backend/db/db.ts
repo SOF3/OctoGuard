@@ -20,7 +20,7 @@ export namespace db{
 		sqlMessage: string
 	}
 
-	export const reportError: DBErrorHandler = (err: SqlError) =>{
+	export const reportError: ErrorHandler = (err: SqlError) =>{
 		console.error(`Error ${err.code} executing query: ${err.sqlMessage}`)
 		console.error(`Error at: '${err.sql}'`)
 	}
@@ -76,15 +76,15 @@ export namespace db{
 	export type QueryArgument = string | number | boolean | Date | Buffer | null
 	export type ResultSet<R extends StringMap<CellValue>> = R[]
 	export type TableRef = string
-	type WhereClause = string | IWhereClause
-	type WhereArgs = QueryArgument[] | IWhereClause
+	export type WhereClause = string | IWhereClause
+	export type WhereArgs = QueryArgument[] | IWhereClause
 	export type FieldRef = string | {toString(): string}
 	export type FieldList = StringMap<FieldRef>
 
 	function nop(): void{
 	}
 
-	interface IWhereClause{
+	export interface IWhereClause{
 		toString(): string
 
 		getArgs(): QueryArgument[]
@@ -108,7 +108,7 @@ export namespace db{
 		}
 	}
 
-	export interface DBErrorHandler{
+	export interface ErrorHandler{
 		(error: SqlError): void
 	}
 
@@ -166,7 +166,7 @@ export namespace db{
 				.concat(this.orderArgs)
 		}
 
-		execute<R extends StringMap<CellValue>>(onSelect: (result: ResultSet<R>) => void, onError: DBErrorHandler){
+		execute<R extends StringMap<CellValue>>(onSelect: (result: ResultSet<R>) => void, onError: ErrorHandler){
 			select(this.createQuery(),
 				this.createArgs(),
 				onSelect,
@@ -178,7 +178,7 @@ export namespace db{
 		return new Array(count).fill("?").join(",")
 	}
 
-	export function select<R extends StringMap<CellValue>>(query: string, args: QueryArgument[], onSelect: (result: ResultSet<R>) => void, onError: DBErrorHandler){
+	export function select<R extends StringMap<CellValue>>(query: string, args: QueryArgument[], onSelect: (result: ResultSet<R>) => void, onError: ErrorHandler){
 		console.debug("Executing query: ", query.trim())
 		console.debug("Args:", args)
 		pool.query({
@@ -194,7 +194,7 @@ export namespace db{
 		})
 	}
 
-	export function keyInsert(table: TableRef, staticFields: StringMap<QueryArgument | null>, updateFields: StringMap<QueryArgument | null>, onError: DBErrorHandler, onInsert: (insertId: number) => void = nop){
+	export function insert_dup(table: TableRef, staticFields: StringMap<QueryArgument | null>, updateFields: StringMap<QueryArgument | null>, onError: ErrorHandler, onInsert: (insertId: number) => void = nop){
 		const mergedFields: StringMap<QueryArgument | null> = Object.assign({}, staticFields, updateFields)
 		insert(`INSERT INTO \`${table}\`
 			(${Object.keys(mergedFields).map(col => "`" + col + "`").join(",")})
@@ -203,7 +203,7 @@ export namespace db{
 			Object.values(mergedFields).concat(Object.values(updateFields)), onError, onInsert)
 	}
 
-	export function insert(query: string, args: QueryArgument[], onError: DBErrorHandler, onInsert: (insertId: number) => void){
+	export function insert(query: string, args: QueryArgument[], onError: ErrorHandler, onInsert: (insertId: number) => void){
 		console.debug("MySQL query: " + query)
 		pool.query({
 			sql: query,
@@ -218,11 +218,13 @@ export namespace db{
 		})
 	}
 
-	export function update(table: TableRef, set: StringMap<QueryArgument | null>, where: WhereClause, whereArgs: WhereArgs, onError: DBErrorHandler, onUpdated: (changedRows) => void = nop){
-		pool.query({
-			sql: `UPDATE \`${table}\`
+	export function update(table: TableRef, set: StringMap<QueryArgument | null>, where: WhereClause, whereArgs: WhereArgs, onError: ErrorHandler, onUpdated: (changedRows) => void = nop){
+		const query = `UPDATE \`${table}\`
 				SET ${Object.keys(set).map(column => `\`${column}\` = ?`).join(",")}
-				WHERE ${where}`,
+				WHERE ${where}`
+		console.debug("MySQL query: " + query)
+		pool.query({
+			sql: query,
 			values: Object.values(set).concat(whereArgs instanceof Array ? whereArgs : whereArgs.getArgs()),
 			timeout: secrets.mysql.timeout,
 		}, (err, results, fields) =>{
@@ -234,9 +236,11 @@ export namespace db{
 		})
 	}
 
-	export function del(table: TableRef, where: WhereClause, whereArgs: WhereArgs, onError: DBErrorHandler){
+	export function del(table: TableRef, where: WhereClause, whereArgs: WhereArgs, onError: ErrorHandler){
+		const query = `DELETE FROM \`${table}\` WHERE ${where}`
+		console.debug("MySQL query: " + query)
 		pool.query({
-			sql: `DELETE FROM \`${table}\` WHERE ${where}`,
+			sql: query,
 			values: whereArgs instanceof Array ? whereArgs : whereArgs.getArgs(),
 			timeout: secrets.mysql.timeout,
 		}, (err: SqlError, results, fields) =>{
@@ -249,5 +253,4 @@ export namespace db{
 	export function acquire(user: (err, connection) => void){
 		pool.getConnection(user)
 	}
-
 }

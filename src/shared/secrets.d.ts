@@ -22,6 +22,10 @@ export namespace OctoGuard{
 			timeout: number
 			poolSize: number
 		}
+		session: {
+			staticDuration: number
+		}
+		kidneyInterval: number
 		debug: {
 			addresses: string[]
 		}

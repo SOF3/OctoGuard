@@ -91,6 +91,11 @@ app.use((err: Error | TriggeredError, req, res, next) =>{
 	})
 })
 
-setInterval(login.cleanDb)
+const kidney = () =>{
+	console.info("Executing kidney")
+	login.cleanDb()
+}
+kidney()
+setInterval(kidney, secrets.kidneyInterval)
 
 export = app

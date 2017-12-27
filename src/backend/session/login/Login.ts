@@ -17,16 +17,14 @@ export class Login{
 		this.token = token
 		this.regDate = new Date
 
-		db.keyInsert("user", {
-			uid: uid,
+		db.insert_dup("user", {
+			userId: uid,
 			regDate: new Date,
 		}, {
 			name: name,
 			onlineDate: new Date,
-		}, db.reportError)
-
-		db.select("SELECT regDate FROM user WHERE uid = ?", [uid], result =>{
+		}, db.reportError, () => db.select("SELECT regDate FROM user WHERE userId = ?", [uid], result =>{
 			this.regDate = <Date> result[0].regDate
-		}, db.reportError)
+		}, db.reportError))
 	}
 }

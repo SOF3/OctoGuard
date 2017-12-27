@@ -13,12 +13,12 @@ export function middleware(req, res, next){
 		}
 		const login = req.login = loginCookies[cookie]
 		req.login.touch = new Date()
-		db.keyInsert("user_session", {
+		db.insert_dup("user_session", {
 			cookie: cookie,
 		}, {
-			uid: login.uid,
+			userId: login.uid,
 		}, db.reportError)
-		db.update("user", {onlineDate: new Date}, "uid = ?", [login.uid], db.reportError)
+		db.update("user", {onlineDate: new Date}, "userId = ?", [login.uid], db.reportError)
 		next()
 	}
 
