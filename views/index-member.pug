@@ -7,23 +7,3 @@ block content
 	h1 Welcome back, #{CommonConstants.login.name}!
 	hr
 	#body-wrapper
-		#install-list-panel
-			h3 Your Integrations
-			p#install-list-loading Loading...
-			#install-list
-			#install-entry-template.template
-				.install-entry-row
-					.install-name.install-entry-value
-					.install-type.install-entry-value
-				.install-entry-row
-					.install-coverage.install-entry-value
-						span.install-coverage-value
-						span repos
-						span.install-coverage-count
-						a.install-coverage-edit (Edit)
-					.install-creationDate.timestamp.install-entry-value
-			p
-				a.action#install-add Change integrated repos
-		#profile-list-panel
-			h3 OctoGuard Profiles
-		#third-panel

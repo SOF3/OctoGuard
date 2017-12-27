@@ -62,7 +62,7 @@ function _(path: string, method: string, token: string,
 					const follow = match[1]
 					linked = true
 					_(follow, method, token, (append) =>{
-						body = (<any[]> body).concat(append); // tail recursion! $append should contain all pages from the next one onwards
+						body = (<any[]> body).concat(append) // tail recursion! $append should contain all pages from the next one onwards
 						consume(body)
 					}, error, body, accept, followAdapter)
 				}

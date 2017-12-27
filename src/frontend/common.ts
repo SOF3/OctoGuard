@@ -126,5 +126,6 @@ $(function(){
 		})
 	}, 1e+3)
 
+	linkify("a#install-add", `https://github.com/apps/${CommonConstants.ghApp.name}/installations/new`)
 	$("a#action-login").click(login)
 })
