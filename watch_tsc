@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 (cd src/backend && tsc -w --diagnostics) &
-(cd src/frontend && tsc -w --diagnostics)
+(cd src/frontend && tsc -w --diagnostics) &
+sleep infinity

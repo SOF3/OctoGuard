@@ -66,6 +66,8 @@
     <inspection_tool class="IncorrectRandomRangeInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="InfinityLoopInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="InvertedIfElseConstructsInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="JSUnusedGlobalSymbols" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="JSUnusedLocalSymbols" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="MagicMethodsValidityInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="MisorderedModifiersInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="MissingIssetImplementationInspection" enabled="true" level="WARNING" enabled_by_default="true" />

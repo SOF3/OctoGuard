@@ -2,8 +2,12 @@ extends layout
 
 block foot_scripts
 	script(src="/javascripts/index-member.js")
+	link(rel="stylesheet", href="/stylesheets/index-member.css")
 
 block content
-	h1 Welcome back, #{CommonConstants.login.name}!
-	hr
+	#head-wrapper
+		img(src="/favicon.ico", width=40, height=40)
+		div
+			img(src=`https://github.com/${CommonConstants.login.name}.png`, width=40, height=40)
+			a.action.action-logout Logout
 	#body-wrapper

@@ -2,11 +2,13 @@ function linkify(selector: string, url: string){
 	$(selector).attr("href", url)
 }
 
-function ajax(path: string, args: ReqSuper, success: JQuery.Ajax.SuccessCallback<any>): void{
+const nop: () => void = () => void 0
+
+function ajax(path: string, args: ReqSuper = {}, success: JQuery.Ajax.SuccessCallback<any> = nop): void{
 	if(path.charAt(0) !== "/"){
 		path = "/" + path
 	}
-	$.post("/ajax/request", {path: path}, token => console.log(token) || $.ajax("/ajax" + path, {
+	$.post("/ajax/request", {path: path}, token => $.ajax("/ajax" + path, {
 			contentType: "application/json",
 			headers: {"X-Ajax-Token": token},
 			dataType: "json",
@@ -128,4 +130,5 @@ $(function(){
 
 	linkify("a#install-add", `https://github.com/apps/${CommonConstants.ghApp.name}/installations/new`)
 	$("a#action-login").click(login)
+	$("a#action-logout").click(() => ajax("logout"))
 })

@@ -40,6 +40,11 @@ router.use((req, res, next) =>{
 		return
 	}
 
+	if(!req.login.loggedIn){
+		next(new TriggeredError("Login is required for this action", 401))
+		return
+	}
+
 	let handler: ARH<ReqSuper, ResSuper> = knownEnds[path.substr(1)]
 	handler(new AjaxRequest(req.login, req.body,
 		response => res.set("Content-Type", "application/json").send(JSON.stringify(response)),

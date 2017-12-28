@@ -1,6 +1,7 @@
 body{
-	padding: 50px;
-	font:    14px "Lucida Grande", Helvetica, Arial, sans-serif;
+	padding:  50px;
+	font:     14px "Lucida Grande", Helvetica, Arial, sans-serif;
+	overflow: hidden;
 }
 a{
 	color:           #00B7FF;
@@ -9,16 +10,7 @@ a{
 .action{
 	cursor: pointer;
 }
-#body-wrapper{
-	display: flex;
-	flex-flow: row;
-	justify-content: space-between;
-}
-.column-title{
-	text-align: left;
-	font-weight: bold;
-}
-.column-placeholder{
-	color: #999999;
-	text-align: center;
+.disabled{
+	cursor: no-drop !important;
+	color: #CCCCCC;
 }
