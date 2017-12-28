@@ -1,9 +1,11 @@
 import {db} from "../db/db"
 import {LabelAction} from "./actions/label"
 import {LockAction} from "./actions/lock"
+import {CommentAction} from "./actions/comment"
 
 export interface ProfileRuleAction{
-	actionId: number
+	type: string
+	id: number
 }
 
 export interface ProfileRuleActionStatic{
@@ -17,4 +19,5 @@ declare const ProfileRuleAction: ProfileRuleActionStatic
 export const ProfileRuleActions: ProfileRuleActionStatic[] = [
 	LabelAction,
 	LockAction,
+	CommentAction,
 ]

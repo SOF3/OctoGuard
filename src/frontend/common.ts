@@ -13,7 +13,13 @@ function ajax(path: string, args: ReqSuper = {}, success: JQuery.Ajax.SuccessCal
 			headers: {"X-Ajax-Token": token},
 			dataType: "json",
 			data: JSON.stringify(args),
-			error: jqXHR => alert(`Error ${jqXHR.status}: ${jqXHR.responseText}`),
+			error: jqXHR =>{
+				if(jqXHR.status !== 0){
+					alert(`Error ${jqXHR.status}: ${jqXHR.responseText}`)
+				}else{
+					console.log(jqXHR)
+				}
+			},
 			method: "POST",
 			success: success
 		})
@@ -100,20 +106,23 @@ $(function(){
 			const time = <number> $this.data("timestamp")
 			const date = new Date(time)
 			const timeDiff = Math.abs(now.getTime() - time)
+			const hours: string = date.getHours() < 10 ? `0${date.getHours()}` : date.getHours().toString()
+			const minutes: string = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes().toString()
+			const seconds: string = date.getSeconds() < 10 ? `0${date.getSeconds()}` : date.getSeconds().toString()
 			if(now.getFullYear() !== date.getFullYear()){
 				$this.text(`${MONTHS[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`)
 				return
 			}
 			if(timeDiff > 86400e+3 * 7){
-				$this.text(`${MONTHS[date.getMonth()]} ${date.getDate()}, ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`)
+				$this.text(`${MONTHS[date.getMonth()]} ${date.getDate()}, ${hours}:${minutes}:${seconds}`)
 				return
 			}
 			if(now.getDate() !== date.getDate()){ // within one week, different day
-				$this.text(`${WEEKDAYS[date.getDay()]}, ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`)
+				$this.text(`${WEEKDAYS[date.getDay()]}, ${hours}:${minutes}:${seconds}`)
 				return
 			}
 			if(timeDiff > 3600e+3 * 4){
-				$this.text(`${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`)
+				$this.text(`${hours}:${minutes}:${seconds}`)
 				return
 			}
 			let text = ""

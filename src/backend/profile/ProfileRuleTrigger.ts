@@ -3,7 +3,8 @@ import {WordFilterTrigger} from "./triggers/word_filter"
 import {ThrottleTrigger} from "./triggers/throttle"
 
 export interface ProfileRuleTrigger{
-	triggerId: number
+	type: string
+	id: number
 }
 
 export interface ProfileRuleTriggerStatic{

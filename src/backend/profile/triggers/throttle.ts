@@ -7,17 +7,18 @@ export class ThrottleTrigger implements ProfileRuleTrigger{
 		max: "max",
 		period: "period",
 		coverage: "coverage",
-		triggerId: "triggerId",
+		triggerId: "id",
 	}
 
-	triggerId: number
+	type = "throttle"
+	id: number
 	max: number
 	period: number
 	coverage: coverage.name[]
 
 	static fromRow(row: {triggerId: number, max: number, period: number, coverage: number} & DProfileRule): ThrottleTrigger{
 		const ret = new ThrottleTrigger
-		ret.triggerId = row.triggerId
+		ret.id = row.triggerId
 		ret.max = row.max
 		ret.period = row.period
 		ret.coverage = coverage.parse(row.coverage)

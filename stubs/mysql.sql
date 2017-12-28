@@ -55,7 +55,7 @@ CREATE TABLE profile_rule (
 ### profile rule triggers
 DROP TABLE IF EXISTS trigger_word_filter;
 CREATE TABLE trigger_word_filter (
-	triggerId INT PRIMARY KEY AUTO_INCREMENT,
+	triggerId INT PRIMARY KEY AUTO_INCREMENT, # Note: id may duplicate in different trigger types
 	ruleId    INT,
 	word_list TEXT,
 	coverage  INT, # see dbStructs.d.ts:ProfileRuleCoverageName for values
@@ -77,9 +77,9 @@ CREATE TABLE trigger_throttle (
 ### profile actions
 DROP TABLE IF EXISTS action_comment;
 CREATE TABLE action_comment (
-	actionId INT PRIMARY KEY AUTO_INCREMENT,
+	actionId INT PRIMARY KEY AUTO_INCREMENT, # Note: id may duplicate in different action types
 	ruleId   INT,
-	template TEXT, # unit: seconds, 0 = infinity
+	template TEXT,
 	KEY (ruleId),
 	FOREIGN KEY (ruleId) REFERENCES profile_rule (ruleId)
 		ON DELETE CASCADE

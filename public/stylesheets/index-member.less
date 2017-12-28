@@ -2,7 +2,6 @@ body{
 	padding:  0;
 	margin:   0;
 	overflow: hidden;
-	display: none;
 }
 #head-wrapper{
 	margin:           0;
@@ -24,23 +23,48 @@ body{
 	justify-content: space-between;
 	margin:          0 30px;
 }
+.regular-column{
+	display:    none;
+	width:      320px;
+	min-width:  320px;
+	max-width:  320px;
+	padding:    10px;
+	max-height: 100%;
+}
 .column-title{
 	text-align:  center;
 	font-weight: bold;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing:    border-box;
+	box-sizing:         border-box;
+	margin: 0;
+	padding: 15px;
+	height: 40px;
 }
 .column-placeholder{
 	color:      #999999;
 	text-align: center;
 }
 .column-content{
-	display: none;
+	display:            none;
+	overflow-y:         scroll;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing:    border-box;
+	box-sizing:         border-box;
 }
-.regular-column{
-	display: none;
-	width:     320px;
-	min-width: 320px;
-	max-width: 320px;
-	padding:   10px;
+.list-item-wrapper{
+	padding: 10px;
+	margin: 0;
+}
+.list-item-title{
+	padding: 5px;
+}
+.list-item-detail{
+	color:       #999999;
+	font-family: serif;
+}
+.list-item-spoiler{
+	margin-left: 5px;
 }
 .body-scroll-button-wrapper{
 	position: relative;

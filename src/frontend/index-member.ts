@@ -119,6 +119,7 @@ $(function(){
 
 			for(let i = 0; i < this.displaySize; ++i){
 				this.columns[i].$.css("display", "block")
+				this.columns[i].onRender()
 			}
 
 			leftButtonWrapper.prependTo(wrapper)
@@ -162,6 +163,7 @@ $(function(){
 		usingPlaceholder: boolean = true
 
 		$: JQuery
+		protected $title: JQuery
 		protected $placeholder: JQuery
 		protected $content: JQuery
 
@@ -169,9 +171,13 @@ $(function(){
 			this.name = name
 			this.placeholder = placeholder
 			this.$ = $(`<div class="regular-column"></div>`)
-				.append($(`<h3 class="column-title"></h3>`).text(this.name.emit()))
+				.append(this.$title = $(`<h3 class="column-title"></h3>`).text(this.name.emit()))
 				.append(this.$placeholder = $(`<p class="column-placeholder"></p>`).text(this.placeholder.emit()))
 				.append(this.$content = $(`<div class="column-content"></div>`))
+		}
+
+		onRender(){
+			this.$content.css("height", (window.innerHeight - Header.HEIGHT - 40 /* $title height */ - 20 /* twice .regular-column padding */) + "px")
 		}
 
 		abstract updateDependency(newValue: D)
@@ -204,7 +210,36 @@ $(function(){
 		}
 
 		updateDependency(installations: StringMap<Installation>){
-
+			this.$content.empty()
+			for(const installId in installations){
+				const install = installations[installId]
+				const reposDiv = $(`<div class="list-item-spoiler" style="display: none;"><p class="column-placeholder">Loading...</p></div>`)
+				let reposExpanded = false
+				const expand = $(`<a class="action">Expand</a>`).click(() =>{
+					expand.text(reposExpanded ? "Expand" : "Collapse")
+					reposDiv.css("display", reposExpanded ? "none" : "block")
+					reposExpanded = !reposExpanded
+				})
+				this.$content.append($(`<div class="list-item-wrapper"></div>`)
+					.append($(`<p class="list-item-title"></p>`)
+						.append($(`<a target="_blank"></a>`).text(install.account.login)
+							.attr("href", install.html_url)))
+					.append($(`<p class="list-item-detail"></p>`).text("Last changed: ")
+						.append($(`<span class="timestamp"></span>`)
+							.attr("data-timestamp", new Date(install.updated_at).getTime())))
+					.append($(`<p class="list-item-spoiler-tag"></p>`).append(expand))
+					.append(reposDiv))
+				ajax("installDetails", <InstallDetailsReq> {installId: parseInt(installId)}, (repos: InstallDetailsRes) =>{
+					reposDiv.empty()
+					for(let i = 0; i < repos.length; ++i){
+						reposDiv.append($("<div></div>")
+							.append($(`<p></p>`).text(repos[i].name)))
+					}
+				})
+			}
+			this.$content.append($("<div></div>")
+				.append($(`<a class="action">Install OctoGuard in more organizations</a>`)
+					.attr("href", `https://github.com/apps/${CommonConstants.ghApp.name}/installations/new`)))
 			this.useContent()
 		}
 	}
@@ -242,10 +277,15 @@ $(function(){
 	const headWrapper = $("#head-wrapper")
 	const bodyWrapper = $("#body-wrapper")
 
-	document.body.style.height = window.innerHeight + "px"
+	document.body.style.height = document.body.style.maxHeight = window.innerHeight + "px"
+	document.body.style.display = "block"
 
 	headWrapper.css("height", `${Header.HEIGHT}px`)
+		.css("min-height", `${Header.HEIGHT}px`)
+		.css("max-height", `${Header.HEIGHT}px`)
 	bodyWrapper.css("height", `${window.innerHeight - Header.HEIGHT}px`)
+		.css("min-height", `${window.innerHeight - Header.HEIGHT}px`)
+		.css("max-height", `${window.innerHeight - Header.HEIGHT}px`)
 
 	const viewPort = x.v = new ViewPort
 	const orgsColumn = new OrgsColumn

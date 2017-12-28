@@ -31,6 +31,16 @@ declare interface IProfileRule{
 	ruleId: number
 	profileId: number
 	updated: Date
+	triggers: IProfileRuleTrigger[]
+	actions: IProfileRuleAction[]
+}
+
+declare interface IProfileRuleTrigger{
+	type: string | "word_filter" | "throttle"
+	id: number
+}
+declare interface IProfileRuleAction{
+	type: string | "comment" | "label" | "lock"
 }
 
 declare interface IProfileRuleCoverage {
