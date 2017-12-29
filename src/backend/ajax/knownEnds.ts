@@ -29,7 +29,7 @@ export class AjaxRequest<Q extends ReqSuper, S extends ResSuper>{
 	login: Login
 	args: Q
 	consume: (response: S) => void
-	onError: (status: number, message: string) => void
+	onError: ARErrorHandler
 
 	constructor(login: Login, args: Q, consume: (response: S) => void, error: (status: number, message: string) => void){
 		this.login = login

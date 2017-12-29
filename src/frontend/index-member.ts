@@ -221,15 +221,19 @@ $(function(){
 					reposExpanded = !reposExpanded
 				})
 				this.$content.append($(`<div class="list-item-wrapper"></div>`)
-					.append($(`<p class="list-item-title"></p>`)
-						.append($(`<a target="_blank"></a>`).text(install.account.login)
-							.attr("href", install.html_url)))
+					.append($(`<p class="list-item-title"></p>`).text(install.account.login))
 					.append($(`<p class="list-item-detail"></p>`).text("Last changed: ")
 						.append($(`<span class="timestamp"></span>`)
 							.attr("data-timestamp", new Date(install.updated_at).getTime())))
+					.append($(`<p class="list-item-detail"></p>`)
+						.text(`Installed in ${install.repository_selection} repos `)
+						.append($(`<a class="action">(Edit)</a>`).attr("href", install.html_url)))
 					.append($(`<p class="list-item-spoiler-tag"></p>`).append(expand))
 					.append(reposDiv))
-				ajax("installDetails", <InstallDetailsReq> {installId: parseInt(installId)}, (repos: InstallDetailsRes) =>{
+				ajax("installDetails", <InstallDetailsReq> {
+					installId: parseInt(installId),
+					orgId: install.account.id,
+				}, (repos: InstallDetailsRes) =>{
 					reposDiv.empty()
 					for(let i = 0; i < repos.length; ++i){
 						reposDiv.append($("<div></div>")

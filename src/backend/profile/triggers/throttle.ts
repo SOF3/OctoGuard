@@ -4,10 +4,10 @@ import * as coverage from "../coverage"
 export class ThrottleTrigger implements ProfileRuleTrigger{
 	static table = "trigger_throttle"
 	static fields = {
+		triggerId: "triggerId",
 		max: "max",
 		period: "period",
 		coverage: "coverage",
-		triggerId: "id",
 	}
 
 	type = "throttle"

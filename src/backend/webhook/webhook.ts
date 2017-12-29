@@ -67,19 +67,13 @@ router.post("/", (req, res) =>{
 			locateProfile(result[0].pid)
 			return
 		}
-		db.select("SELECT profileId FROM install_profile_map WHERE installId = ?", [payload.installation.id], result =>{
+		db.select("SELECT profileId FROM profile WHERE owner = ? AND name = ?", [payload.repository.owner.id, Profile.DEFAULT_NAME], result =>{
 			if(result.length > 0){
 				locateProfile(result[0].pid)
 				return
 			}
-			db.select("SELECT profileId FROM profile WHERE owner = ? AND name = ?", [payload.repository.owner.id, Profile.DEFAULT_NAME], result =>{
-				if(result.length > 0){
-					locateProfile(result[0].pid)
-					return
-				}
-				payload.profile = Profile.defaultProfile(payload.repository.owner.id, new Date) // the regDate doesn't matter here
-				handlerTypes[event].handle(payload, res)
-			}, reportError)
+			payload.profile = Profile.defaultProfile(payload.repository.owner.id, new Date) // the regDate doesn't matter here
+			handlerTypes[event].handle(payload, res)
 		}, reportError)
 	}, reportError)
 })

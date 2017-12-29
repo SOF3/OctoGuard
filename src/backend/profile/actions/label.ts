@@ -3,7 +3,7 @@ import {ProfileRuleAction} from "../ProfileRuleAction"
 export class LabelAction implements ProfileRuleAction{
 	static table = "action_label"
 	static fields = {
-		actionId: "id",
+		actionId: "actionId",
 		name: `${LabelAction.table}.name`,
 	}
 

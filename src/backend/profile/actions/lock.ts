@@ -3,12 +3,12 @@ import {ProfileRuleAction} from "../ProfileRuleAction"
 export class LockAction implements ProfileRuleAction{
 	static table = "action_lock"
 	static fields = {
-		actionId: "id",
+		actionId: "actionId",
 		duration: "duration",
 	}
 
-	type = "lock"
 	id: number
+	type = "lock"
 	duration: number
 
 	static fromRow(row: {actionId: number, duration: number} & DProfileRule): LockAction{

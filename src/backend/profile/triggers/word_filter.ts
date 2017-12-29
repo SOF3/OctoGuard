@@ -4,7 +4,7 @@ import {ProfileRuleTrigger} from "../ProfileRuleTrigger"
 export class WordFilterTrigger implements ProfileRuleTrigger{
 	static table = "trigger_word_filter"
 	static fields = {
-		triggerId: "id",
+		triggerId: "triggerId",
 		words: "word_list",
 		coverage: "coverage",
 	}

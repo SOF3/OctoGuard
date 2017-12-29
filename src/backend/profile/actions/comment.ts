@@ -1,13 +1,13 @@
 import {ProfileRuleAction} from "../ProfileRuleAction"
 
 export class CommentAction implements ProfileRuleAction{
-	static table = "action_label"
+	static table = "action_comment"
 	static fields = {
-		actionId: "id",
+		actionId: "actionId",
 		template: "template",
 	}
 
-	type: "label"
+	type: "comment"
 	id: number
 	template: string
 
