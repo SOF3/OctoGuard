@@ -4,6 +4,7 @@ declare const CommonConstants: {
 		clientId: string
 		name: string
 	}
+	defaultProfileName: string
 	login: {
 		name: string
 		uid: number

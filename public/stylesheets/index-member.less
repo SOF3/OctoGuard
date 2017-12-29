@@ -41,31 +41,49 @@ body{
 	padding: 15px;
 	height: 40px;
 }
-.column-placeholder{
+.placeholder-text{
 	color:      #999999;
 	text-align: center;
 }
 .column-content{
 	display:            none;
-	overflow-y:         scroll;
+	overflow-y:         visible;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing:    border-box;
 	box-sizing:         border-box;
 }
 .list-item-wrapper{
-	padding: 10px;
-	margin: 0;
+	margin: 0 0 5px 0;
+}
+.list-item-header{
+	padding: 5px 10px;
+	cursor:  pointer;
+}
+.list-item-header:hover{
+	background-color: #CCCCCC;
 }
 .list-item-title{
-	padding: 5px;
+	padding-bottom: 5px;
+	margin:         5px;
 }
 .list-item-detail{
 	color:       #999999;
 	margin:      5px;
 	font-family: serif;
 }
+.list-item-spoiler-tag{
+	margin:  0;
+	padding: 5px;
+}
+.list-item-spoiler-tag a.spoiler-displayed{
+	text-shadow: 1px 1px 1px #00B7FF;
+}
 .list-item-spoiler{
 	margin-left: 5px;
+	border:      #999999 groove;
+	padding:     5px;
+}
+.small-list-item{
 }
 .body-scroll-button-wrapper{
 	position: relative;

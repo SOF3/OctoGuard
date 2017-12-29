@@ -34,9 +34,8 @@ function continueLoginFlow(req, res){
 	return (err, httpResponse, body) =>{
 		const {access_token: token}: {access_token: string} = query_string.parse(body)
 		gh_api.whoAmI(token, user =>{
-			console.info(`Login ${user.login}!`)
 			const login: Login = req.login
-			login.login(user.id, user.login, user.name === null ? user.login : user.name, token)
+			login.login(user.id, user.login, user.name === null ? user.login : user.name, token, "GitHub login flow")
 
 			res.redirect("/")
 		}, (message, statusCode) =>{

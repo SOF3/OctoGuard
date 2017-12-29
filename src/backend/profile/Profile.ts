@@ -6,8 +6,8 @@ export class Profile implements IProfile{
 	profileId: number
 	owner: number
 	name: string
-	created: Date
-	updated: Date
+	created: number
+	updated: number
 	visibility: ProfileVisibility
 	rules: IProfileRule[] = []
 
@@ -30,8 +30,8 @@ export class Profile implements IProfile{
 		p.profileId = r.profileId
 		p.owner = r.owner
 		p.name = r.name
-		p.created = r.created
-		p.updated = r.updated
+		p.created = r.created.getTime()
+		p.updated = r.updated.getTime()
 		p.visibility = r.visibility
 		return p
 	}
@@ -41,8 +41,8 @@ export class Profile implements IProfile{
 		p.profileId = -1
 		p.owner = ownerUid
 		p.name = Profile.DEFAULT_NAME
-		p.created = regDate
-		p.updated = regDate
+		p.created = p.updated = regDate.getTime()
+		p.visibility = "collaborator"
 		return p
 	}
 

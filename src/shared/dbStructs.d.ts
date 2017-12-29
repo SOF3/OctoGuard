@@ -15,8 +15,8 @@ declare interface IProfile{
 	profileId: number
 	owner: number
 	name: string
-	created: Date
-	updated: Date
+	created: number
+	updated: number
 	visibility: ProfileVisibility
 	rules: IProfileRule[]
 }

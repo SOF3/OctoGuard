@@ -24,7 +24,7 @@ export function middleware(req, res, next){
 				}else{
 					loginCookies[cookie] = req.login = new Login(cookie)
 					if(result.length > 0){
-						req.login.login(result[0].userId, result[0].name, result[0].displayName, result[0].token)
+						req.login.login(result[0].userId, result[0].name, result[0].displayName, result[0].token, "cookie stored in MySQL")
 					}
 				}
 				next()

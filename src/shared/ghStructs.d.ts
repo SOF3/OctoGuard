@@ -115,7 +115,7 @@ declare namespace GitHubAPI{
 		html_url: string
 		app_id: number
 		target_id: number
-		target_type: string
+		target_type: "User" | "Organization"
 		permissions: {
 			pull_requests: Permission
 			issues: Permission

@@ -4,7 +4,7 @@ function linkify(selector: string, url: string){
 
 const nop: () => void = () => void 0
 
-function ajax(path: string, args: ReqSuper = {}, success: JQuery.Ajax.SuccessCallback<any> = nop): void{
+function ajax<Q extends ReqSuper, S extends ResSuper>(path: string, args: Q = {} as Q, success: JQuery.Ajax.SuccessCallback<any> & ((res: S) => void) = nop): void{
 	if(path.charAt(0) !== "/"){
 		path = "/" + path
 	}

@@ -1,6 +1,7 @@
 import * as express from "express"
 import {secrets} from "../secrets"
 import * as coverage from "../profile/coverage"
+import {Profile} from "../profile/Profile"
 
 export const router = express.Router()
 
@@ -17,7 +18,8 @@ router.use((req, res, next) =>{
 			clientId: secrets.ghApp.clientId,
 			name: secrets.ghApp.name,
 		},
-		login: login
+		defaultProfileName: Profile.DEFAULT_NAME,
+		login: login,
 	}
 	res.locals.CoverageTypes = coverage.types
 	next()

@@ -179,8 +179,7 @@ export namespace db{
 	}
 
 	export function select<R extends StringMap<CellValue>>(query: string, args: QueryArgument[], onSelect: (result: ResultSet<R>) => void, onError: ErrorHandler){
-		console.debug("Executing query: ", query.trim())
-		console.debug("Args:", args)
+		logQuery(query, args)
 		pool.query({
 			sql: query,
 			timeout: secrets.mysql.timeout,
@@ -204,7 +203,7 @@ export namespace db{
 	}
 
 	export function insert(query: string, args: QueryArgument[], onError: ErrorHandler, onInsert: (insertId: number) => void){
-		console.debug("MySQL query: " + query)
+		logQuery(query, args)
 		pool.query({
 			sql: query,
 			timeout: secrets.mysql.timeout,
@@ -222,10 +221,11 @@ export namespace db{
 		const query = `UPDATE \`${table}\`
 				SET ${Object.keys(set).map(column => `\`${column}\` = ?`).join(",")}
 				WHERE ${where}`
-		console.debug("MySQL query: " + query)
+		const args = Object.values(set).concat(whereArgs instanceof Array ? whereArgs : whereArgs.getArgs())
+		logQuery(query, args)
 		pool.query({
 			sql: query,
-			values: Object.values(set).concat(whereArgs instanceof Array ? whereArgs : whereArgs.getArgs()),
+			values: args,
 			timeout: secrets.mysql.timeout,
 		}, (err, results, fields) =>{
 			if(err){
@@ -238,7 +238,7 @@ export namespace db{
 
 	export function del(table: TableRef, where: WhereClause, whereArgs: WhereArgs, onError: ErrorHandler){
 		const query = `DELETE FROM \`${table}\` WHERE ${where}`
-		console.debug("MySQL query: " + query)
+		logQuery(query, whereArgs instanceof Array ? whereArgs : whereArgs.getArgs())
 		pool.query({
 			sql: query,
 			values: whereArgs instanceof Array ? whereArgs : whereArgs.getArgs(),
@@ -252,5 +252,9 @@ export namespace db{
 
 	export function acquire(user: (err, connection) => void){
 		pool.getConnection(user)
+	}
+
+	function logQuery(query: string, args: QueryArgument[]){
+		console.debug("Executing MySQL query: ", query.replace(/[\n\r\t ]+/g, " ").trim(), "|", JSON.stringify(args))
 	}
 }

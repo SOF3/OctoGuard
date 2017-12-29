@@ -14,13 +14,15 @@ export class Login{
 		this.cookie = cookie
 	}
 
-	login(uid: number, name: string, displayName: string, token: string): void{
+	login(uid: number, name: string, displayName: string, token: string, method: string): void{
 		this.loggedIn = true
 		this.uid = uid
 		this.name = name
 		this.displayName = displayName
 		this.token = token
 		this.regDate = new Date
+
+		console.info(`User ${name} logged in by ${method}`)
 
 		db.insert_dup("user", {
 			userId: uid,
