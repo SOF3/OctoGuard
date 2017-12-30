@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"out": "../../../public/javascripts/common.js",
 		"allowJs": true,
-		"target": "es5",
+		"target": "es3",
 		"noImplicitReturns": true,
 		"allowUnreachableCode": false,
 		"newLine": "LF",
@@ -12,6 +12,7 @@
 		"removeComments": true
 	},
 	"include": [
+		"./polyfill.ts",
 		"./common.ts",
 		"../*.d.ts",
 		"../../shared/**/*.d.ts"

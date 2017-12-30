@@ -33,10 +33,10 @@ class OrgsColumn extends Column<Installation | OrgRepo, StringMap<Installation>>
 				}
 			})
 
-			ajax("installDetails", <InstallDetailsReq> {
+			ajax("installDetails", {
 				installId: parseInt(installId),
 				orgId: install.account.id,
-			}, (repos: InstallDetailsRes) => installRepoWatch[install.account.id].set(repos))
+			} as InstallDetailsReq, (repos: InstallDetailsRes) => installRepoWatch[install.account.id].set(repos))
 		}
 		this.$content.append($("<div></div>")
 			.append($(`<a class="action" target="_blank">Install OctoGuard in more organizations</a>`)

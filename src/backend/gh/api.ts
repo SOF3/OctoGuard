@@ -11,11 +11,11 @@ export interface GHErrorHandler{
 }
 
 export function whoAmI(token: string, consumer: (user: User) => void, error: GHErrorHandler){
-	_("/user", "GET", token, response => consumer(<User> response), error)
+	_("/user", "GET", token, (response: User) => consumer(response), error)
 }
 
 export function listInstalls(token: string, consumer: (installations: Installation[]) => void, error: GHErrorHandler){
-	_("/user/installations", "GET", token, response => consumer(<Installation[]> response["installations"]), error)
+	_("/user/installations", "GET", token, response => consumer(response["installations"] as Installation[]), error)
 }
 
 type InstallReposResponse = GenericResponse & {
@@ -62,7 +62,7 @@ function _(path: string, method: string, token: string,
 					const follow = match[1]
 					linked = true
 					_(follow, method, token, (append) =>{
-						body = (<any[]> body).concat(append) // tail recursion! $append should contain all pages from the next one onwards
+						body = (body as any[]).concat(append) // tail recursion! $append should contain all pages from the next one onwards
 						consume(body)
 					}, error, body, accept, followAdapter)
 				}

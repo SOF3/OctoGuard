@@ -19,7 +19,7 @@ export function parse(bitmask: number): name[]{
 	const names: name[] = []
 	for(let i = 0; bitmask > 0; bitmask >>= 1){
 		if((bitmask & 1) === 1){
-			names.push(<name> types[i])
+			names.push(types[i] as name)
 		}
 	}
 	return names
@@ -28,7 +28,7 @@ export function parse(bitmask: number): name[]{
 export function emit(names: name[]): number{
 	let bitmask = 0
 	for(const i in names){
-		bitmask |= <number> types[names[i]]
+		bitmask |= types[names[i]] as number
 	}
 	return bitmask
 }

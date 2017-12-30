@@ -41,7 +41,7 @@
       <option name="workingDir" value="$ProjectFileDir$" />
       <envs />
     </TaskOptions>
-    <TaskOptions isEnabled="false">
+    <TaskOptions isEnabled="true">
       <option name="arguments" value="--compilation_level SIMPLE_OPTIMIZATIONS --js $FileName$" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" />
@@ -56,7 +56,7 @@
       <option name="outputFromStdout" value="true" />
       <option name="program" value="$PROJECT_DIR$/closure_compiler.jar" />
       <option name="runOnExternalChanges" value="true" />
-      <option name="scopeName" value="Project Files" />
+      <option name="scopeName" value="frontend-js" />
       <option name="trackOnlyRoot" value="true" />
       <option name="workingDir" value="$FileDir$" />
       <envs />

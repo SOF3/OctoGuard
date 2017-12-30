@@ -1,6 +1,17 @@
 SET FOREIGN_KEY_CHECKS = 0;
-# sessions
 DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS user_session;
+DROP TABLE IF EXISTS profile;
+DROP TABLE IF EXISTS repo_profile_map;
+DROP TABLE IF EXISTS profile_rule;
+DROP TABLE IF EXISTS trigger_word_filter;
+DROP TABLE IF EXISTS trigger_throttle;
+DROP TABLE IF EXISTS action_comment;
+DROP TABLE IF EXISTS action_lock;
+DROP TABLE IF EXISTS action_label;
+SET FOREIGN_KEY_CHECKS = 1;
+
+# sessions
 CREATE TABLE user (
 	userId      INT UNSIGNED PRIMARY KEY,
 	name        VARCHAR(64) UNIQUE,
@@ -9,7 +20,6 @@ CREATE TABLE user (
 	regDate     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	onlineDate  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-DROP TABLE IF EXISTS user_session;
 CREATE TABLE user_session (
 	cookie CHAR(40) PRIMARY KEY,
 	userId INT UNSIGNED,
@@ -18,7 +28,6 @@ CREATE TABLE user_session (
 		ON DELETE CASCADE
 );
 # profile
-DROP TABLE IF EXISTS profile;
 CREATE TABLE profile (
 	profileId  INT PRIMARY KEY,
 	owner      INT UNSIGNED,
@@ -29,7 +38,6 @@ CREATE TABLE profile (
 	KEY (owner)
 );
 ## profile mapping
-DROP TABLE IF EXISTS repo_profile_map;
 CREATE TABLE repo_profile_map (
 	repoId    INT UNSIGNED PRIMARY KEY,
 	profileId INT,
@@ -37,7 +45,6 @@ CREATE TABLE repo_profile_map (
 		ON DELETE CASCADE
 );
 ## profile rules
-DROP TABLE IF EXISTS profile_rule;
 CREATE TABLE profile_rule (
 	ruleId    INT PRIMARY KEY,
 	profileId INT,
@@ -46,7 +53,6 @@ CREATE TABLE profile_rule (
 		ON DELETE CASCADE
 );
 ### profile rule triggers
-DROP TABLE IF EXISTS trigger_word_filter;
 CREATE TABLE trigger_word_filter (
 	triggerId INT PRIMARY KEY AUTO_INCREMENT, # Note: id may duplicate in different trigger types
 	ruleId    INT,
@@ -56,7 +62,6 @@ CREATE TABLE trigger_word_filter (
 	FOREIGN KEY (ruleId) REFERENCES profile_rule (ruleId)
 		ON DELETE CASCADE
 );
-DROP TABLE IF EXISTS trigger_throttle;
 CREATE TABLE trigger_throttle (
 	triggerId INT PRIMARY KEY AUTO_INCREMENT,
 	ruleId    INT,
@@ -68,7 +73,6 @@ CREATE TABLE trigger_throttle (
 		ON DELETE CASCADE
 );
 ### profile actions
-DROP TABLE IF EXISTS action_comment;
 CREATE TABLE action_comment (
 	actionId INT PRIMARY KEY AUTO_INCREMENT, # Note: id may duplicate in different action types
 	ruleId   INT,
@@ -77,7 +81,6 @@ CREATE TABLE action_comment (
 	FOREIGN KEY (ruleId) REFERENCES profile_rule (ruleId)
 		ON DELETE CASCADE
 );
-DROP TABLE IF EXISTS action_lock;
 CREATE TABLE action_lock (
 	actionId INT PRIMARY KEY AUTO_INCREMENT,
 	ruleId   INT,
@@ -86,7 +89,6 @@ CREATE TABLE action_lock (
 	FOREIGN KEY (ruleId) REFERENCES profile_rule (ruleId)
 		ON DELETE CASCADE
 );
-DROP TABLE IF EXISTS action_label;
 CREATE TABLE action_label (
 	actionId INT PRIMARY KEY AUTO_INCREMENT,
 	ruleId   INT,
@@ -96,5 +98,4 @@ CREATE TABLE action_label (
 		ON DELETE CASCADE
 );
 
-SET FOREIGN_KEY_CHECKS = 1;
 SHOW TABLES;

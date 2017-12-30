@@ -40,7 +40,7 @@ export class AjaxRequest<Q extends ReqSuper, S extends ResSuper>{
 }
 
 export const knownEnds: StringMap<ARH<any, any>> = {
-	listProfiles: <ARH<ListProfilesReq, ListProfilesRes>>_("listProfiles"),
-	installDetails: <ARH<InstallDetailsReq, InstallDetailsRes>>_("installDetails"),
-	logout: <ARH<LogoutReq, LogoutRes>>_("logout")
+	listProfiles: _("listProfiles") as ARH<ListProfilesReq, ListProfilesRes>,
+	installDetails: _("installDetails") as ARH<InstallDetailsReq, InstallDetailsRes>,
+	logout: _("logout") as ARH<LogoutReq, LogoutRes>,
 }

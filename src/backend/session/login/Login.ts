@@ -33,7 +33,7 @@ export class Login{
 			token: token,
 			onlineDate: new Date,
 		}, db.reportError, () => db.select("SELECT regDate FROM user WHERE userId = ?", [uid], result =>{
-			this.regDate = <Date> result[0].regDate
+			this.regDate = result[0].regDate as Date
 		}, db.reportError))
 	}
 

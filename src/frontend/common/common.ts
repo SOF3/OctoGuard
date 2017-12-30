@@ -66,7 +66,7 @@ $(function(){
 		const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 		$(".timestamp[data-timestamp]").each(function(){
 			const $this = $(this)
-			const time = <number> $this.data("timestamp")
+			const time = parseInt($this.attr("data-timestamp"))
 			const date = new Date(time)
 			const timeDiff = Math.abs(now.getTime() - time)
 			const hours: string = date.getHours() < 10 ? `0${date.getHours()}` : date.getHours().toString()

@@ -3,6 +3,10 @@ import * as gh_api from "../gh/api"
 import {db} from "../db/db"
 
 export = (req: AjaxRequest<InstallDetailsReq, InstallDetailsRes>) =>{
+	if(req.args.installId === undefined){
+		req.onError(400, "Missing parameter installId")
+		return
+	}
 	gh_api.getInstallRepos(req.args.installId, req.login.token, (repos: (Repository & {profileId: number})[]) =>{
 			db.select(`SELECT rpm.repoId, rpm.profileId FROM repo_profile_map rpm
 			INNER JOIN profile p ON rpm.profileId = p.profileId

@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"out": "../../../public/javascripts/index-member.js",
 		"allowJs": true,
-		"target": "es5",
+		"target": "es3",
 		"noImplicitReturns": true,
 		"allowUnreachableCode": false,
 		"newLine": "LF",

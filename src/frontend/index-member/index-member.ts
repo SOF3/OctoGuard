@@ -1,7 +1,8 @@
 const x = {} as any
-$(function(){
-// insert classes here
 
+const orgs: StringMap<Installation> = {} // indexed by UID
+
+$(function(){
 	const headWrapper = $("#head-wrapper")
 	const bodyWrapper = $("#body-wrapper")
 
@@ -23,8 +24,10 @@ $(function(){
 	viewPort.columns = [orgsColumn, profilesColumn, rulesColumn, triggersColumn]
 	viewPort.render(bodyWrapper)
 
-
-	ajax("listProfiles", <ListProfilesReq> {}, (res: ListProfilesRes) =>{
+	ajax("listProfiles", {} as ListProfilesReq, (res: ListProfilesRes) =>{
+		for(const i in res.installations){
+			orgs[res.installations[i].account.id] = res.installations[i]
+		}
 		orgsColumn.updateDependency(res.installations)
 	})
 })

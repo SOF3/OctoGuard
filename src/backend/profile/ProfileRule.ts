@@ -45,7 +45,7 @@ export class ProfileRule implements IProfileRule{
 				triggerQuery.execute(triggers =>{
 					for(let i = 0; i < triggers.length; ++i){
 						const trigger = triggerType.fromRow(triggers[i])
-						rules[<number> triggers[i].ruleId].triggers.push(trigger)
+						rules[triggers[i].ruleId as number].triggers.push(trigger)
 					}
 					if(--remainingTasks <= 0){
 						onReady(rules)
@@ -64,7 +64,7 @@ export class ProfileRule implements IProfileRule{
 				actionQuery.execute(actions =>{
 					for(let i = 0; i < actions.length; ++i){
 						const action = actionType.fromRow(actions[i])
-						rules[<number> actions[i].ruleId].actions.push(action)
+						rules[actions[i].ruleId as number].actions.push(action)
 					}
 					if(--remainingTasks <= 0){
 						onReady(rules)

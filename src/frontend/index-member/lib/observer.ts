@@ -18,6 +18,12 @@ class Observable<T>{
 		}
 	}
 
+	public triggerAll(){
+		for(let i = 0; i < this.observers.length; ++i){
+			this.observers[i](this.value, this.value)
+		}
+	}
+
 	public observe(observer: Observer<T>): void{
 		if(this.observers.indexOf(observer) !== -1){
 			throw "Observer already added"
