@@ -53,43 +53,6 @@ class QueuedAjaxRequest{
 	}
 }
 
-function atomicPost(path: string, args: {}, success: JQuery.Ajax.SuccessCallback<any>, dataType?: string){
-	atomicAjax(path, {
-		dataType: dataType,
-		method: "POST",
-		data: args,
-		success: success
-	})
-}
-
-function atomicAjax(path: string, options: JQuery.AjaxSettings){
-	const request: QueuedAjaxRequest = new QueuedAjaxRequest(path, options)
-	const onComplete: () => void = () => request.onComplete()
-	if(options.success){
-		if(options.success instanceof Array){
-			options.success.unshift(onComplete)
-		}else{
-			options.success = [onComplete, options.success]
-		}
-	}else{
-		options.success = [onComplete]
-	}
-	if(options.error){
-		if(options.error instanceof Array){
-			options.error.unshift(onComplete)
-		}else{
-			options.error = [onComplete, options.error]
-		}
-	}else{
-		options.error = [onComplete]
-	}
-
-	ajaxQueue.push(request)
-	if(ajaxQueue.length === 1){
-		ajaxQueue[0].dispatch()
-	}
-}
-
 function login(){
 	$.post("/ajax/request", {path: "Special:auth-callback", long: true}, token =>{
 		window.location.assign(`https://github.com/login/oauth/authorize?client_id=${CommonConstants.ghApp.clientId}&state=${token}`)

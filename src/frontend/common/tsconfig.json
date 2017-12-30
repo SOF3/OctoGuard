@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"outDir": "../../public/javascripts",
+		"out": "../../../public/javascripts/common.js",
 		"allowJs": true,
 		"target": "es5",
 		"noImplicitReturns": true,
@@ -12,7 +12,8 @@
 		"removeComments": true
 	},
 	"include": [
-		"./**/*",
-		"../shared/**/*.d.ts"
+		"./common.ts",
+		"../*.d.ts",
+		"../../shared/**/*.d.ts"
 	]
 }

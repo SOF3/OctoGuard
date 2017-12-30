@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"out": "../../../public/javascripts/index-member.js",
+		"allowJs": true,
+		"target": "es5",
+		"noImplicitReturns": true,
+		"allowUnreachableCode": false,
+		"newLine": "LF",
+		"sourceMap": false,
+		"module": "none",
+		"preserveConstEnums": true,
+		"removeComments": true
+	},
+	"include": [
+		"./**/*",
+		"../common/common.d.ts",
+		"../*.d.ts",
+		"../../shared/**/*.d.ts"
+	]
+}

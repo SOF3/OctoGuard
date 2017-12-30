@@ -98,5 +98,3 @@ CREATE TABLE action_label (
 
 SET FOREIGN_KEY_CHECKS = 1;
 SHOW TABLES;
-
-# TODO: I refactored column names in this commit. Refactor the references in code too!
