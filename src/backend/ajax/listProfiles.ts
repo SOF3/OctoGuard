@@ -1,4 +1,4 @@
-import * as gh_api from "../gh/api"
+import {gh} from "../gh/api"
 import {AjaxRequest, OnError_AR2DB, OnError_AR2GH} from "./knownEnds"
 import {db} from "../db/db"
 import {Profile} from "../profile/Profile"
@@ -11,7 +11,7 @@ import Join = db.Join
 export = (req: AjaxRequest<ListProfilesReq, ListProfilesRes>) =>{
 	const onError = OnError_AR2DB(req.onError)
 
-	gh_api.listInstalls(req.login.token, (installsArray: Installation[]) =>{
+	gh.listInstalls(req.login.token, (installsArray: Installation[])=>{
 		const installsByInstallId: StringMap<Installation> = {}
 		const installsByUid: StringMap<Installation> = {}
 		const uids: number[] = []

@@ -8,7 +8,7 @@ declare interface DProfile extends StringMap<CellValue>{
 	name: string
 	created: Date
 	updated: Date
-	visibility: ProfileVisibility
+	visibility: number
 }
 
 declare interface IProfile{

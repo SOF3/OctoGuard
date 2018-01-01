@@ -16,11 +16,20 @@ class RulesColumn extends Column<IProfileRule, IProfile | null>{
 
 		const nameSpan = $("<span></span>").text(profile.name)
 		if(profile.name !== CommonConstants.defaultProfileName){
+			let suspended = false
 			nameSpan.addClass("item-name-edit")
 				.click(function(this: HTMLSpanElement){
+					if(suspended){
+						return
+					}
 					const newName = prompt("Enter a new profile name", profile.name)
 					this.innerText = newName
 					profile.name = newName
+					suspended = true
+					ajax("editProfile", {
+						profileId: profile.profileId,
+						name: profile.name,
+					} as EditProfileReq, (res: EditProfileRes)=>suspended = false)
 				})
 		}
 
@@ -32,8 +41,13 @@ class RulesColumn extends Column<IProfileRule, IProfile | null>{
 				organization: _(`Only ${orgRole("members")} can view the profile's settings`),
 				collaborator: _("Only collaborators of repos using this profile can view the profile's settings"),
 			}).change(function(this: HTMLSelectElement){
-				profile.visibility = this.value as ProfileVisibility
-
+				const select = this
+				profile.visibility = select.value as ProfileVisibility
+				select.disabled = true
+				ajax("editProfile", {
+					profileId: profile.profileId,
+					visibility: profile.visibility,
+				} as EditProfileReq, (res: EditProfileRes)=>select.disabled = false)
 			}))
 			.append(` (Only ${orgRole("owners")} can edit the profile)`))
 	}

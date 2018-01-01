@@ -100,7 +100,7 @@ export namespace db{
 		}
 
 		toString(): string{
-			return `${this.field} IN (${qm(this.literalList.length)})`
+			return this.literalList.length !== 0 ? `(${this.field} IN (${qm(this.literalList.length)}))` : "0"
 		}
 
 		getArgs(): QueryArgument[]{
@@ -202,7 +202,7 @@ export namespace db{
 			Object.values(mergedFields).concat(Object.values(updateFields)), onError, onInsert)
 	}
 
-	export function insert(query: string, args: QueryArgument[], onError: ErrorHandler, onInsert: (insertId: number) => void){
+	export function insert(query: string, args: QueryArgument[], onError: ErrorHandler, onInsert: (insertId: number)=>void = nop){
 		logQuery(query, args)
 		pool.query({
 			sql: query,

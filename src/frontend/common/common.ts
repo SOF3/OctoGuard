@@ -26,33 +26,6 @@ function ajax<Q extends ReqSuper, S extends ResSuper>(path: string, args: Q = {}
 		, "text")
 }
 
-const ajaxQueue: QueuedAjaxRequest[] = []
-
-class QueuedAjaxRequest{
-	path: string
-	options: JQuery.AjaxSettings
-	completed: boolean = false
-	_this = this
-
-	constructor(path: string, options: JQuery.AjaxSettings){
-		this.path = path
-		this.options = options
-	}
-
-	dispatch(): void{
-		$.ajax(this.path, this.options)
-	}
-
-	onComplete(): void{
-		this.completed = true
-		console.assert(this === ajaxQueue[0])
-		ajaxQueue.shift()
-		if(ajaxQueue.length > 0){
-			ajaxQueue[0].dispatch()
-		}
-	}
-}
-
 function login(){
 	$.post("/ajax/request", {path: "Special:auth-callback", long: true}, token =>{
 		window.location.assign(`https://github.com/login/oauth/authorize?client_id=${CommonConstants.ghApp.clientId}&state=${token}`)

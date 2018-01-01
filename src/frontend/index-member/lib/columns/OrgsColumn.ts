@@ -35,7 +35,6 @@ class OrgsColumn extends Column<Installation | OrgRepo, StringMap<Installation>>
 
 			ajax("installDetails", {
 				installId: parseInt(installId),
-				orgId: install.account.id,
 			} as InstallDetailsReq, (repos: InstallDetailsRes) => installRepoWatch[install.account.id].set(repos))
 		}
 		this.$content.append($("<div></div>")

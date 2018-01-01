@@ -6,25 +6,47 @@ import Repository = GitHubAPI.Repository
 
 const PREVIEW_INTEGRATION: string = "application/vnd.github.machine-man-preview+json"
 
+export namespace gh{
+	export function whoAmI(token: string, consumer: (user: User)=>void, error: GHErrorHandler){
+		_("/user", "GET", token, (response: User)=>consumer(response), error)
+	}
+
+	export function listInstalls(token: string, consumer: (installations: Installation[])=>void, error: GHErrorHandler){
+		_("/user/installations", "GET", token, response=>consumer(response["installations"] as Installation[]), error)
+	}
+
+	export function getInstallRepos(installationId: number, token: string, consume: (repos: Repository[])=>void, error: GHErrorHandler){
+		_(`/user/installations/${installationId}/repositories?per_page=100`, "GET", token, consume, error, undefined, [PREVIEW_INTEGRATION], (r: InstallReposResponse)=>r.repositories)
+	}
+
+	export enum OrganizationRole {
+		OWNER, // one of owners
+		MEMBER, // normal member
+		NONE // not in org
+	}
+
+	export function getMembership(organizationId: number, username: string, token: string, consume: (role: OrganizationRole)=>void, onError: GHErrorHandler){
+		_(`/organizations/${organizationId}/memberships/${username}`, "GET", token, (result: {
+			role: "member" | "admin"
+		})=>{
+			consume(result.role === "member" ? OrganizationRole.MEMBER : OrganizationRole.OWNER)
+		}, (error, status)=>{
+			if(status === 404){
+				consume(OrganizationRole.NONE)
+			}else{
+				onError(error, status)
+			}
+		})
+	}
+}
+
 export interface GHErrorHandler{
 	(message: string, statusCode: number | null): void
-}
-
-export function whoAmI(token: string, consumer: (user: User) => void, error: GHErrorHandler){
-	_("/user", "GET", token, (response: User) => consumer(response), error)
-}
-
-export function listInstalls(token: string, consumer: (installations: Installation[]) => void, error: GHErrorHandler){
-	_("/user/installations", "GET", token, response => consumer(response["installations"] as Installation[]), error)
 }
 
 type InstallReposResponse = GenericResponse & {
 	total_count: number,
 	repositories: Repository[]
-}
-
-export function getInstallRepos(installationId: number, token: string, consume: (repos: Repository[]) => void, error: GHErrorHandler){
-	_(`/user/installations/${installationId}/repositories?per_page=100`, "GET", token, consume, error, undefined, [PREVIEW_INTEGRATION], (r: InstallReposResponse) => r.repositories)
 }
 
 type GenericResponse = {} | any[]

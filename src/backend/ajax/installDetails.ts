@@ -1,5 +1,5 @@
 import {AjaxRequest, OnError_AR2DB, OnError_AR2GH} from "./knownEnds"
-import * as gh_api from "../gh/api"
+import {gh} from "../gh/api"
 import {db} from "../db/db"
 
 export = (req: AjaxRequest<InstallDetailsReq, InstallDetailsRes>) =>{
@@ -7,10 +7,11 @@ export = (req: AjaxRequest<InstallDetailsReq, InstallDetailsRes>) =>{
 		req.onError(400, "Missing parameter installId")
 		return
 	}
-	gh_api.getInstallRepos(req.args.installId, req.login.token, (repos: (Repository & {profileId: number})[]) =>{
+	gh.getInstallRepos(req.args.installId, req.login.token, (repos: (Repository & {profileId: number})[])=>{
 			db.select(`SELECT rpm.repoId, rpm.profileId FROM repo_profile_map rpm
-			INNER JOIN profile p ON rpm.profileId = p.profileId
-			WHERE p.owner = ?`, [req.args.orgId], (result: db.ResultSet<{
+				INNER JOIN profile p ON rpm.profileId = p.profileId
+				INNER JOIN install i ON p.owner = i.orgId
+				WHERE i.installId = ?`, [req.args.installId], (result: db.ResultSet<{
 				repoId: number,
 				profileId: number
 			}>) =>{

@@ -1,7 +1,7 @@
 import {TriggeredError} from "../../utils/TriggeredError"
 import * as curl from "request"
 import * as query_string from "query-string"
-import * as gh_api from "../../gh/api"
+import {gh} from "../../gh/api"
 import {Login} from "../login/Login"
 import * as ajax from "../ajax/index"
 import {secrets} from "../../secrets"
@@ -33,7 +33,7 @@ export function loginFlow(req, res, next){
 function continueLoginFlow(req, res){
 	return (err, httpResponse, body) =>{
 		const {access_token: token}: {access_token: string} = query_string.parse(body)
-		gh_api.whoAmI(token, user =>{
+		gh.whoAmI(token, user=>{
 			const login: Login = req.login
 			login.login(user.id, user.login, user.name === null ? user.login : user.name, token, "GitHub login flow")
 

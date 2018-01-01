@@ -37,6 +37,7 @@
       <option name="SPACE_BEFORE_CLASS_LBRACE" value="false" />
       <option name="FORCE_QUOTE_STYlE" value="true" />
       <option name="ENFORCE_TRAILING_COMMA" value="WhenMultiline" />
+      <option name="SPACE_AROUND_ARROW_FUNCTION_OPERATOR" value="false" />
       <option name="SPACE_BEFORE_ASYNC_ARROW_LPAREN" value="false" />
       <option name="SPACES_WITHIN_OBJECT_TYPE_BRACES" value="false" />
     </TypeScriptCodeStyleSettings>

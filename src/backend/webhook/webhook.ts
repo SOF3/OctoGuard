@@ -39,7 +39,18 @@ const handlerTypes: StringMap<WebhookHandler> = {
 
 router.post("/", (req, res) =>{
 	const event = req.headers["x-github-event"]
-	console.info(`Handling ${event} webhook event`)
+	const payload = req.body
+	console.info(`Handling "${event}" webhook event`)
+	console.log("Data:", payload)
+
+	if(event === "installation"){
+		handleInstallation(payload, res)
+		return
+	}
+	if(event === "installation_repositories"){
+		handleInstallationRepositories(payload, res)
+		return
+	}
 
 	if(handlerTypes[event] === undefined){
 		res.status(422).set("Content-Type", "text/plain").send("Unsupported event type: " + event)
@@ -61,8 +72,8 @@ router.post("/", (req, res) =>{
 		}, reportError)
 	}
 
-	const payload: BaseWebhookPayload = req.body
-	db.select("SELECT profileId FROM repo_profile_map WHERE repoId = ?", [payload.repository.id], result =>{
+	db.select("SELECT profileId FROM repo_profile_map WHERE repoId = ?",
+		[(payload as BaseWebhookPayload).repository.id], result=>{
 		if(result.length > 0){
 			locateProfile(result[0].pid)
 			return
@@ -81,3 +92,28 @@ router.post("/", (req, res) =>{
 router.use("/", (req, res) =>{
 	res.status(405).set("Content-Type", "text/plain").send("Method not allowed")
 })
+
+function handleInstallation(payload: {action: "created" | "deleted", installation: Installation}, res){
+	if(payload.action === "created"){
+		db.insert("INSERT INTO `install` (installId, orgId) VALUES (?, ?)",
+			[payload.installation.id, payload.installation.account.id], error=>{
+				res.status(500).send("MySQL error: " + error.sqlMessage)
+			})
+	}else{
+		db.del("install", "installId = ? AND orgId = ?", [payload.installation.id, payload.installation.account.id], error=>{
+			res.status(500).send("MySQL error: " + error.sqlMessage)
+		})
+	}
+	res.send("Roger")
+}
+
+function handleInstallationRepositories(payload: {
+	action: "added" | "removed"
+	installation: Installation
+	repository_selection: "selected" | "all"
+	repositories_added: Repository[]
+	repositories_removed: Repository[]
+}, res){
+	// nothing to do
+	res.send("Roger")
+}

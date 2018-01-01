@@ -32,7 +32,7 @@ export class Profile implements IProfile{
 		p.name = r.name
 		p.created = r.created.getTime()
 		p.updated = r.updated.getTime()
-		p.visibility = r.visibility
+		p.visibility = this.visibility_num2str(r.visibility)
 		return p
 	}
 
