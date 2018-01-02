@@ -4,8 +4,6 @@ node_js:
 install:
   - npm install typescript -g
   - npm install
-before_script:
-  - chmod +x tsc_*
 script:
   - "(cd src/backend && tsc)"
   - "(cd src/frontend/common && tsc)"
