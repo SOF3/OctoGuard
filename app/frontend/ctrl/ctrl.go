@@ -41,19 +41,29 @@ type requiredField struct {
 }
 
 func stringToType(kind reflect.Kind, v reflect.Value, s string) (err error) {
-	var bitSize = 0
+	bitSize := 0
 	switch kind {
 	case reflect.String:
 		v.SetString(s)
 	case reflect.Int8:
+		bitSize = 8
 		fallthrough
 	case reflect.Int16:
+		if bitSize == 0 {
+			bitSize = 16
+		}
 		fallthrough
 	case reflect.Int32:
+		if bitSize == 0 {
+			bitSize = 32
+		}
 		fallthrough
 	case reflect.Int64:
 		fallthrough
 	case reflect.Int:
+		if bitSize == 0 {
+			bitSize = 64
+		}
 		var i int64
 		i, err = strconv.ParseInt(s, 10, 64)
 		if err != nil {
@@ -65,19 +75,19 @@ func stringToType(kind reflect.Kind, v reflect.Value, s string) (err error) {
 		bitSize = 8
 		fallthrough
 	case reflect.Uint16:
-		if bitSize != 0 {
+		if bitSize == 0 {
 			bitSize = 16
 		}
 		fallthrough
 	case reflect.Uint32:
-		if bitSize != 0 {
+		if bitSize == 0 {
 			bitSize = 32
 		}
 		fallthrough
 	case reflect.Uint64:
 		fallthrough
 	case reflect.Uint:
-		if bitSize != 0 {
+		if bitSize == 0 {
 			bitSize = 64
 		}
 		var i uint64
@@ -90,7 +100,7 @@ func stringToType(kind reflect.Kind, v reflect.Value, s string) (err error) {
 		bitSize = 32
 		fallthrough
 	case reflect.Float64:
-		if bitSize != 0 {
+		if bitSize == 0 {
 			bitSize = 64
 		}
 		var f float64
