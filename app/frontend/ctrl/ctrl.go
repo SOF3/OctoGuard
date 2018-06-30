@@ -167,7 +167,7 @@ func Ajax(input interface{}, handler AjaxHandler, needToken bool, needLogin bool
 			}
 		}
 
-		params := reflect.Zero(t)
+		params := reflect.New(t)
 		for i, field := range fields {
 			param, exists := req.PostForm[field.name]
 			if !exists || len(param) == 0 { // missing
@@ -195,14 +195,14 @@ func Ajax(input interface{}, handler AjaxHandler, needToken bool, needLogin bool
 				}
 				params.Field(i).Set(slice)
 			} else {
-				err = stringToType(field.fieldType.Kind(), params.Field(i), param[0])
+				err = stringToType(field.fieldType.Kind(), params.Elem().Field(i), param[0])
 				if err != nil {
 					return
 				}
 			}
 		}
 
-		code, ret, err := handler(req, extra, params, res)
+		code, ret, err := handler(req, extra, params.Elem().Interface(), res)
 		if err != nil {
 			return
 		}

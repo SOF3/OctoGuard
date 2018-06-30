@@ -118,3 +118,13 @@ func (m *ExpiringSyncMap) Set(key string, value interface{}, overwrite bool) boo
 	m.mutex.Unlock()
 	return true
 }
+
+func (m *ExpiringSyncMap) Keys() (keys []string) {
+	m.mutex.RLock()
+	keys = make([]string, 0)
+	for key, _ := range m.entries {
+		keys = append(keys, key)
+	}
+	m.mutex.RUnlock()
+	return
+}

@@ -40,6 +40,7 @@ func DirExists(file string) (exists bool, err error) {
 		if os.IsNotExist(err) {
 			err = nil
 		}
+		return
 	}
 	exists = info.IsDir()
 	return

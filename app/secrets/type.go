@@ -27,6 +27,7 @@ type Type = struct {
 		Timeout struct {
 			GitHubLogin int
 			Session     int
+			Ajax        int
 		}
 	}
 	MySQL struct {

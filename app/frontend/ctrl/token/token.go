@@ -39,6 +39,9 @@ func Handler() middleware.RequestHandler {
 		if err != nil {
 			return
 		}
-		return 201, output{Token: token}, nil
+
+		return 201, output{
+			Token: token,
+		}, nil
 	}, false, false)
 }

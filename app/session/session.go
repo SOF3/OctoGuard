@@ -34,9 +34,16 @@ type Session struct {
 	userName string
 	userID   uint
 	token    string
-	expiry   time.Time
 
 	ajax *util.ExpiringSyncMap
+}
+
+func newSession() *Session {
+	s := new(Session)
+
+	s.ajax = util.NewExpiringSyncMap(time.Duration(secrets.Secrets.HTTP.Timeout.Ajax) * time.Millisecond)
+
+	return s
 }
 
 func (s *Session) Temp() bool {
@@ -116,8 +123,7 @@ func GetCreateSession(req *http.Request, res http.ResponseWriter) (extras.Sessio
 	}
 	sendCookies := err != http.ErrNoCookie && cookieObject != nil && cookieObject.Value == "true"
 
-	newSession := new(Session)
-	newSession.expiry = time.Now().Add(time.Duration(secrets.Secrets.HTTP.Timeout.GitHubLogin) * time.Millisecond)
+	newSession := newSession()
 
 	if !sendCookies {
 		newSession.temp = true
