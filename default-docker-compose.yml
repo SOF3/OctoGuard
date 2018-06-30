@@ -1,0 +1,17 @@
+db:
+  build: ./docker/db/
+  environment:
+    MYSQL_ROOT_PASSWORD: password
+    MYSQL_USER: og
+    MYSQL_PASSWORD: 123456
+    MYSQL_DATABASE: og
+  volumes:
+  - ./data/mysql:/var/lib/mysql
+go:
+  build: ./docker/go
+  volumes:
+  - ./data/secrets:/go/src/app/secrets
+  links:
+  - db:db
+  ports:
+  - 3184:80

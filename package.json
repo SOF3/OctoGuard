@@ -1,0 +1,7 @@
+{
+	"name": "octo-guard",
+	"version": "1.0.0",
+	"dependencies": {
+		"@types/jquery": "^3.3.1"
+	}
+}

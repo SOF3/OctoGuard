@@ -1,0 +1,65 @@
+<html>
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# object: http://ogp.me/ns/object# article: http://ogp.me/ns/article# profile: http://ogp.me/ns/profile#">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous"/>
+	<link rel="stylesheet" type="text/css" href="/res/homepage.css"/>
+	<title>OctoGuard</title>
+</head>
+<body class="text-center">
+<div class="d-flex w-100 h-100 p-3 mx-auto flex-column">
+	<header class="mb-auto"></header>
+	<main role="main" class="inner container">
+		<div class="container HeadLine">
+			<h1>OctoGuard</h1>
+			<p>Defend your GitHub repos from spam, automatically.</p>
+			<button type="button" class="btn btn-primary btn-lg" id="HomepageLogin">Login with GitHub and Get Started</button>
+		</div>
+		<div class="row">
+			<div class="col">
+				<h2>Areas protected</h2>
+				<ul class="list-unstyled mt-3 mb-4">
+					<li>Commit comments</li>
+					<li>Issues and Pull Requests</li>
+					<li>Isolate watchers, stargazers and forks beforehand</li>
+				</ul>
+			</div>
+			<div class="col">
+				<h2>Actions</h2>
+				<ul class="list-unstyled mt-3 mb-4">
+					<li>Lock conversations</li>
+					<li>Delete/edit comments</li>
+					<li>Leave predefined replies</li>
+					<li>Apply labels</li>
+					<li>Block users (need additional OAuth integration)</li>
+				</ul>
+			</div>
+		</div>
+	</main>
+	<footer class="mt-auto">
+		<div class="inner">
+			<p>OctoGuard version {{.Version.Name}}
+				(<a href="https://github.com/SOF3/OctoGuard/tree/{{.Version.Hash}}" target="_blank">@{{.Version.Hash}}</a>)
+			</p>
+			<p>Developed and maintained by <a href="https://github.com/SOF3" target="_blank">SOFe</a>.
+				Report bugs/suggestions on <a href="https://github.com/SOF3/OctoGuard/issues" target="_blank">GitHub</a>.
+			</p>
+		</div>
+	</footer>
+</div>
+<script
+	src="https://code.jquery.com/jquery-3.3.1.min.js"
+	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	crossorigin="anonymous"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+	integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+	crossorigin="anonymous"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+	integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+	crossorigin="anonymous"></script>
+<script src="/PublicConsts"></script>
+<script src="/res/homepage.js"></script>
+</body>
+</html>
