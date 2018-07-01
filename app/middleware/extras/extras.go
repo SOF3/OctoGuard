@@ -18,6 +18,10 @@
 
 package extras
 
+import (
+	"github.com/google/go-github/github"
+)
+
 type RequestExtra struct {
 	RequestId string
 	Session   Session
@@ -25,9 +29,11 @@ type RequestExtra struct {
 
 type Session interface {
 	LoggedIn() bool
-	UserName() string
-	UserID() uint
+	User() *github.User
 	Token() string
+
+	Login(token string) error
+	GitHubClient() *github.Client
 
 	AjaxPrepare(target string) (token string, err error)
 	AjaxConsume(token string, target string) (exists bool)

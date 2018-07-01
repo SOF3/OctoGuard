@@ -19,9 +19,12 @@
 package callback
 
 import (
+	"fmt"
+	"github.com/SOF3/OctoGuard/app/log"
 	"github.com/SOF3/OctoGuard/app/middleware"
 	"github.com/SOF3/OctoGuard/app/middleware/extras"
 	"github.com/SOF3/OctoGuard/app/secrets"
+	"github.com/SOF3/OctoGuard/app/util"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -45,7 +48,25 @@ func Auth() middleware.RequestHandler {
 		}
 		resp.Body.Close()
 
-		println(string(bytes))
+		tokenResult, err := url.ParseQuery(string(bytes))
+		if err != nil {
+			return
+		}
+
+		token, exists := tokenResult["access_token"]
+		if !exists || len(token) == 0 {
+			return util.ErrorString("GitHub does not approve this login, try again")
+		}
+
+		err = extra.Session.Login(token[0])
+		if err != nil {
+			return
+		}
+
+		log.Info(extra.RequestId, fmt.Sprintf("%s (#%d) logged in", *extra.Session.User().Name, extra.Session.User().ID))
+
+		http.Redirect(res, req, "/", 302)
+
 		return
 	}
 }

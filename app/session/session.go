@@ -19,9 +19,12 @@
 package session
 
 import (
+	"context"
 	"github.com/SOF3/OctoGuard/app/middleware/extras"
 	"github.com/SOF3/OctoGuard/app/secrets"
 	"github.com/SOF3/OctoGuard/app/util"
+	"github.com/google/go-github/github"
+	"golang.org/x/oauth2"
 	"net/http"
 	"sync"
 	"time"
@@ -31,9 +34,10 @@ type Session struct {
 	mutex    sync.RWMutex
 	temp     bool
 	loggedIn bool
-	userName string
-	userID   uint
+	user     *github.User
 	token    string
+
+	ghClient *github.Client
 
 	ajax *util.ExpiringSyncMap
 }
@@ -50,30 +54,47 @@ func (s *Session) Temp() bool {
 	return s.temp
 }
 
-func (s *Session) LoggedIn() bool {
+func (s *Session) LoggedIn() (loggedIn bool) {
 	s.mutex.RLock()
-	val := s.loggedIn
+	loggedIn = s.loggedIn
 	s.mutex.RUnlock()
-	return val
+	return
 }
-func (s *Session) UserName() string {
+func (s *Session) User() (user *github.User) {
 	s.mutex.RLock()
-	val := s.userName
+	user = s.user
 	s.mutex.RUnlock()
-	return val
+	return
 }
-func (s *Session) UserID() uint {
+func (s *Session) Token() (token string) {
 	s.mutex.RLock()
-	val := s.userID
+	token = s.token
 	s.mutex.RUnlock()
-	return val
+	return
 }
-func (s *Session) Token() string {
-	s.mutex.RLock()
-	val := s.token
-	s.mutex.RUnlock()
-	return val
+
+func (s *Session) Login(token string) (err error) {
+	s.mutex.Lock()
+	s.ghClient = github.NewClient(oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(&oauth2.Token{
+		AccessToken: token,
+	})))
+	user, _, err := s.ghClient.Users.Get(context.Background(), "")
+	if err != nil {
+		return
+	}
+
+	s.loggedIn = true
+	s.user = user
+	s.token = token
+
+	s.mutex.Unlock()
+
+	return
 }
+func (s *Session) GitHubClient() *github.Client {
+	return s.ghClient
+}
+
 func (s *Session) AjaxPrepare(target string) (token string, err error) {
 	for {
 		token, err = util.CryptoSecureRandomString([]rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"), 20)

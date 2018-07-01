@@ -16,22 +16,43 @@
  * limitations under the License.
  */
 
-package homepage
+package util
 
-import (
-	"github.com/SOF3/OctoGuard/app/frontend/html/data"
-	"github.com/SOF3/OctoGuard/app/middleware"
-	"github.com/SOF3/OctoGuard/app/middleware/extras"
-	"html/template"
-	"net/http"
-)
+type UserError struct {
+	error string
+	// user  bool
+}
 
-func Handler() middleware.RequestHandler {
-	view := template.Must(template.New("homepage.html").ParseFiles("views/homepage.html"))
-
-	return func(req *http.Request, res http.ResponseWriter, extra *extras.RequestExtra) error {
-		return view.Execute(res, data.HomepageArg{
-			Version: data.CreateVersionArg(),
-		})
+func ErrorString(err string) UserError {
+	return UserError{
+		error: err,
 	}
 }
+
+func ErrorError(err error) UserError {
+	return UserError{
+		error: err.Error(),
+	}
+}
+
+// func ErrorString(err string, user bool) UserError {
+// 	return UserError{
+// 		error: err,
+// 		user: user,
+// 	}
+// }
+//
+// func ErrorError(err error, user bool) UserError {
+// 	return UserError{
+// 		error: err.Error(),
+// 		user: user,
+// 	}
+// }
+
+func (e UserError) Error() string {
+	return e.error
+}
+
+// func (e UserError) User() bool {
+// 	return e.user
+// }

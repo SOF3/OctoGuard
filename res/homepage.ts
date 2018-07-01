@@ -20,7 +20,6 @@ $(() => {
 
 		document.cookie = `${PublicConsts.Cookies.Use}=true; expires=Fri, 31 Dec 9999 23:59:59 GMT`
 
-
 		window.location.assign(`https://github.com/login/oauth/authorize?client_id=${PublicConsts.GitHub.Integration.ClientID}`)
 	})
 })

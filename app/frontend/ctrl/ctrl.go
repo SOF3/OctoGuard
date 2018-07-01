@@ -67,7 +67,7 @@ func stringToType(kind reflect.Kind, v reflect.Value, s string) (err error) {
 		var i int64
 		i, err = strconv.ParseInt(s, 10, 64)
 		if err != nil {
-			return
+			return util.ErrorError(err)
 		}
 		v.SetInt(i)
 
@@ -93,7 +93,7 @@ func stringToType(kind reflect.Kind, v reflect.Value, s string) (err error) {
 		var i uint64
 		i, err = strconv.ParseUint(s, 10, bitSize)
 		if err != nil {
-			return
+			return util.ErrorError(err)
 		}
 		v.SetUint(i)
 	case reflect.Float32:
@@ -106,7 +106,7 @@ func stringToType(kind reflect.Kind, v reflect.Value, s string) (err error) {
 		var f float64
 		f, err = strconv.ParseFloat(s, bitSize)
 		if err != nil {
-			return
+			return util.ErrorError(err)
 		}
 		v.SetFloat(f)
 	case reflect.Bool:
@@ -128,7 +128,7 @@ func stringToType(kind reflect.Kind, v reflect.Value, s string) (err error) {
 			v.SetBool(false)
 			break
 		}
-		return errors.New("unknown boolean value " + s)
+		return util.ErrorString("unknown boolean value " + s)
 	default:
 		panic(errors.New("unknown kind " + kind.String()))
 	}

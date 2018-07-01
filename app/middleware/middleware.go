@@ -19,8 +19,11 @@
 package middleware
 
 import (
+	"github.com/SOF3/OctoGuard/app/log"
 	"github.com/SOF3/OctoGuard/app/middleware/extras"
+	"github.com/SOF3/OctoGuard/app/util"
 	"net/http"
+	"reflect"
 )
 
 type RequestHandler = func(req *http.Request, res http.ResponseWriter, extra *extras.RequestExtra) (err error)
@@ -53,7 +56,14 @@ func (h *middlewareHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.Header().Set("Content-Type", "text/plain")
 		w.WriteHeader(500)
-		w.Write([]byte("500 Internal Server Error"))
+		log.Error(extra.RequestId, err.Error())
+
+		if _, ok := err.(util.UserError); ok {
+			w.Write([]byte("500 Internal Server Error. " + err.Error()))
+		} else {
+			println(reflect.TypeOf(err))
+			w.Write([]byte("500 Internal Server Error."))
+		}
 	}
 }
 
