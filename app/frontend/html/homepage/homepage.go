@@ -30,8 +30,8 @@ func Handler() middleware.RequestHandler {
 	view := template.Must(template.New("homepage.html").ParseFiles("views/homepage.html"))
 
 	return func(req *http.Request, res http.ResponseWriter, extra *extras.RequestExtra) error {
-		return view.Execute(res, data.HomepageArg{
-			Version: data.CreateVersionArg(),
+		return view.Execute(res, data.HomepageData{
+			Version: data.CreateVersionData(),
 		})
 	}
 }

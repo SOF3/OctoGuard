@@ -19,14 +19,21 @@
 package dashboard
 
 import (
+	"github.com/SOF3/OctoGuard/app/frontend/html/data"
 	"github.com/SOF3/OctoGuard/app/middleware"
 	"github.com/SOF3/OctoGuard/app/middleware/extras"
+	"html/template"
 	"net/http"
 )
 
 func Handler() middleware.RequestHandler {
+	view := template.Must(template.New("dashboard.html").ParseFiles("views/dashboard.html"))
+
 	return func(req *http.Request, res http.ResponseWriter, extra *extras.RequestExtra) (err error) {
-		// TODO
+		return view.Execute(res, data.DashboardData{
+			Version: data.CreateVersionData(),
+			Login:   data.CreateLoginData(extra.Session),
+		})
 		return
 	}
 }

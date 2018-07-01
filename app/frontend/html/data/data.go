@@ -19,24 +19,40 @@
 package data
 
 import (
+	"github.com/SOF3/OctoGuard/app/middleware/extras"
 	"github.com/SOF3/OctoGuard/app/secrets"
 )
 
-type HomepageArg struct {
-	Version struct {
-		Name string
-		Hash string
-	}
+type HomepageData struct {
+	Version VersionData
 }
 
-type VersionArg struct {
+type DashboardData struct {
+	Version VersionData
+	Login   LoginData
+}
+
+type VersionData struct {
 	Name string
 	Hash string
 }
 
-func CreateVersionArg() VersionArg {
-	return VersionArg{
+type LoginData struct {
+	Name   string
+	UserId int64
+}
+
+func CreateVersionData() VersionData {
+	return VersionData{
 		Name: secrets.VersionName,
 		Hash: secrets.HashVersion[0:7],
+	}
+}
+
+func CreateLoginData(session extras.Session) LoginData {
+	user := session.User()
+	return LoginData{
+		Name:   *user.Name,
+		UserId: *user.ID,
 	}
 }

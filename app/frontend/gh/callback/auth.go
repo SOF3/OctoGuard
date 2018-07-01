@@ -63,7 +63,7 @@ func Auth() middleware.RequestHandler {
 			return
 		}
 
-		log.Info(extra.RequestId, fmt.Sprintf("%s (#%d) logged in", *extra.Session.User().Name, extra.Session.User().ID))
+		log.Info(extra.RequestId, fmt.Sprintf("%s (#%d) logged in", *extra.Session.User().Name, *extra.Session.User().ID))
 
 		http.Redirect(res, req, "/", 302)
 
